@@ -3,15 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="#1C2526">
+    android:background="#1C2526"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Records Fragment"
+        android:text="@string/records"
+        android:textColor="@android:color/white"
         android:textSize="20sp"
-        android:textColor="@android:color/white" />
+        android:layout_marginBottom="16dp" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/records_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

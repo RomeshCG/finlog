@@ -12,4 +12,13 @@
     <string name="categories">Categories</string>
     <string name="statistics">Statistics</string>
     <string name="last_records">Last Records</string>
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
+    <string name="transfer">Transfer</string>
+    <string name="select_date">Select Date</string>
+    <string name="add_record">Add Record</string>
+    <string name="records">Records</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

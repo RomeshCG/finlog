@@ -2,7 +2,6 @@ package com.example.finlog
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.finlog.databinding.ActivityNavigationBinding
 
 class NavigationActivity : AppCompatActivity() {
@@ -16,7 +15,9 @@ class NavigationActivity : AppCompatActivity() {
 
         // Load HomeFragment on start
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
             binding.bottomNavigationView.selectedItemId = R.id.nav_home
         }
 
@@ -24,36 +25,39 @@ class NavigationActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    replaceFragment(HomeFragment())
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, HomeFragment())
+                        .commit()
                     true
                 }
                 R.id.nav_records -> {
-                    replaceFragment(RecordsFragment())
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, RecordsFragment())
+                        .commit()
                     true
                 }
                 R.id.nav_cards -> {
-                    replaceFragment(CardsFragment())
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, CardsFragment())
+                        .commit()
                     true
                 }
                 R.id.nav_menu -> {
-                    replaceFragment(MenuFragment())
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, MenuFragment())
+                        .commit()
                     true
                 }
                 else -> false
             }
         }
 
-        // Handle FAB click (Add Record)
+        // Handle FAB click to open AddRecordFragment
         binding.fabAdd.setOnClickListener {
-            // Placeholder: Switch to RecordsFragment when FAB is clicked
-            replaceFragment(RecordsFragment())
-            binding.bottomNavigationView.selectedItemId = R.id.nav_records
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AddRecordFragment())
+                .addToBackStack(null)
+                .commit()
         }
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
     }
 }

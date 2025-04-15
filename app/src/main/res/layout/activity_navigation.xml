@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorBackground">
 
-    <!-- Fragment Container -->
-    <androidx.fragment.app.FragmentContainerView
+    <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#1C2526"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        android:background="@color/colorSurface"
+        app:itemIconTint="@color/colorOnSurface"
+        app:itemTextColor="@color/colorOnSurface"
         app:menu="@menu/bottom_nav_menu" />
 
-    <!-- Floating Action Button (FAB) for Add Record -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="72dp"
         android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white"
-        app:backgroundTint="#6A5ACD"
-        app:layout_anchor="@+id/bottomNavigationView"
-        app:layout_anchorGravity="center" />
+        app:backgroundTint="@color/buttonBackground"
+        app:elevation="8dp"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/bottom_navigation_view"
+        app:layout_anchorGravity="center"
+        app:pressedTranslationZ="12dp"
+        app:tint="@color/buttonText" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
