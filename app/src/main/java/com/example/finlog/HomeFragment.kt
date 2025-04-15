@@ -1,5 +1,6 @@
 package com.example.finlog
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var dataManager: DataManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,7 +25,122 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textView.text = "Home Fragment"
+
+        // Initialize DataManager
+        dataManager = DataManager(requireContext())
+
+        // Display initial data
+        updateUI()
+
+        // Handle account dropdown click
+        binding.accountDropdown.setOnClickListener {
+            showAccountSelectionDialog()
+        }
+
+        // Handle account item clicks
+        binding.accountTotal.setOnClickListener {
+            dataManager.setSelectedAccount(dataManager.getAccounts()[0]) // Total
+            updateUI()
+        }
+        binding.accountCreditCard.setOnClickListener {
+            dataManager.setSelectedAccount(dataManager.getAccounts()[1]) // Credit Card
+            updateUI()
+        }
+        binding.accountDebitCard.setOnClickListener {
+            dataManager.setSelectedAccount(dataManager.getAccounts()[2]) // Debit Card
+            updateUI()
+        }
+        binding.accountCash.setOnClickListener {
+            dataManager.setSelectedAccount(dataManager.getAccounts()[3]) // Cash
+            updateUI()
+        }
+
+        // Handle menu icon click (placeholder)
+        binding.menuIcon.setOnClickListener {
+            // Add menu functionality later
+        }
+
+        // Handle "All Budgets" click (placeholder)
+        binding.allBudgets.setOnClickListener {
+            // Add navigation to all budgets screen later
+        }
+
+        // Handle "Statistics" click (placeholder)
+        binding.statistics.setOnClickListener {
+            // Add navigation to statistics screen later
+        }
+    }
+
+    private fun updateUI() {
+        // Update date
+        binding.dateText.text = dataManager.getCurrentDate()
+
+        // Update total balance
+        val selectedAccount = dataManager.getSelectedAccount()
+        binding.totalBalance.text = "$${String.format("%.2f", selectedAccount.balance)}"
+
+        // Update budget section
+        val budgetLeft = dataManager.getBudgetLeft()
+        val budgetSpent = dataManager.getTotalBudgetSpent()
+        val budgetAllocated = dataManager.getTotalBudgetAllocated()
+        binding.budgetLeft.text = "$${String.format("%.2f", budgetLeft)} left"
+        binding.budgetSpent.text = "$${String.format("%.2f", budgetSpent)} spent"
+        binding.budgetProgress.max = budgetAllocated.toInt()
+        binding.budgetProgress.progress = budgetSpent.toInt()
+
+        // Update budget categories
+        val categories = dataManager.getBudgetCategories()
+        binding.entertainmentSpent.text = "$${String.format("%.2f", categories[0].spent)} spent"
+        binding.foodSpent.text = "$${String.format("%.2f", categories[1].spent)} spent"
+        binding.fuelSpent.text = "$${String.format("%.2f", categories[2].spent)} spent"
+
+        // Update expense chart
+        binding.expenseChart.text = "Expense\n$${String.format("%.2f", budgetSpent)}"
+        val expenseBreakdown = categories.joinToString("\n") { category ->
+            "${category.name}: $${String.format("%.2f", category.spent)}"
+        }
+        binding.expenseBreakdown.text = expenseBreakdown
+
+        // Update last records
+        val records = dataManager.getLastRecords()
+        if (records.isNotEmpty()) {
+            binding.record1Date.text = records[0].date
+            binding.record1Category.text = records[0].category
+            binding.record1Amount.text = "$${String.format("%.2f", records[0].amount)}"
+        }
+        if (records.size > 1) {
+            binding.record2Date.text = records[1].date
+            binding.record2Category.text = records[1].category
+            binding.record2Amount.text = "$${String.format("%.2f", records[1].amount)}"
+        }
+        if (records.size > 2) {
+            binding.record3Date.text = records[2].date
+            binding.record3Category.text = records[2].category
+            binding.record3Amount.text = "$${String.format("%.2f", records[2].amount)}"
+        }
+
+        // Update account list
+        val accounts = dataManager.getAccounts()
+        binding.accountTotalName.text = accounts[0].name
+        binding.accountTotalBalance.text = "$${String.format("%.2f", accounts[0].balance)}"
+        binding.accountCreditCardName.text = accounts[1].name
+        binding.accountCreditCardBalance.text = "$${String.format("%.2f", accounts[1].balance)}"
+        binding.accountDebitCardName.text = accounts[2].name
+        binding.accountDebitCardBalance.text = "$${String.format("%.2f", accounts[2].balance)}"
+        binding.accountCashName.text = accounts[3].name
+        binding.accountCashBalance.text = "$${String.format("%.2f", accounts[3].balance)}"
+    }
+
+    private fun showAccountSelectionDialog() {
+        val accountNames = dataManager.getAccounts().map { it.name }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Account")
+            .setItems(accountNames) { _, which ->
+                dataManager.setSelectedAccount(dataManager.getAccounts()[which])
+                updateUI()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     override fun onDestroyView() {
