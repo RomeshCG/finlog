@@ -1,0 +1,29 @@
+<resources>
+    <!-- Primary colors -->
+    <color name="colorPrimary">#7C5CFC</color> <!-- Vibrant Purple -->
+    <color name="colorPrimaryVariant">#5A40C2</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+
+    <!-- Background and surface -->
+    <color name="colorBackground">#0D0D0D</color> <!-- Dark background -->
+    <color name="colorSurface">#1A1A1A</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+
+    <!-- Accent & Highlight -->
+    <color name="colorAccent">#5AF2A2</color> <!-- Green for safe actions -->
+    <color name="colorError">#FF5252</color> <!-- Red for expenses -->
+    <color name="colorWarning">#FFC107</color> <!-- Yellow for alerts -->
+
+    <!-- Neutral grays -->
+    <color name="colorGrayLight">#CCCCCC</color>
+    <color name="colorGrayMedium">#888888</color>
+    <color name="colorGrayDark">#444444</color>
+
+    <!-- Button colors -->
+    <color name="buttonBackground">#7C5CFC</color>
+    <color name="buttonText">#FFFFFF</color>
+
+    <!-- Others -->
+    <color name="onboardingCard">#121212</color> <!-- Card-like surface -->
+    <color name="transparentWhite">#99FFFFFF</color> <!-- Semi-transparent white -->
+</resources>
