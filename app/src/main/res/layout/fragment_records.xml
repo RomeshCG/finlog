@@ -1,21 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1C2526"
-    android:padding="16dp">
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:id="@+id/empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@android:drawable/ic_menu_report_image"
+            android:alpha="0.5"
+            app:tint="@color/colorGrayMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_records_yet"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_your_first_record"
+            android:textSize="14sp"
+            android:alpha="0.7"
+            android:textColor="@color/colorGrayLight"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_records_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/records"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/all_records"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnSurface"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/records_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_records_title"
+        tools:listitem="@layout/item_record" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

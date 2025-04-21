@@ -21,6 +21,24 @@ class AddRecordFragment : Fragment() {
 
     private lateinit var dataManager: DataManager
     private val calendar = Calendar.getInstance()
+    private var recordToEdit: Record? = null
+
+    companion object {
+        private const val ARG_RECORD = "record"
+
+        fun newInstance(record: Record? = null): AddRecordFragment {
+            val fragment = AddRecordFragment()
+            val args = Bundle()
+            args.putSerializable(ARG_RECORD, record)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        recordToEdit = arguments?.getSerializable(ARG_RECORD) as? Record
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,6 +86,7 @@ class AddRecordFragment : Fragment() {
         binding.incomeCategory.adapter = categoryAdapter
         binding.transferFromAccount.adapter = accountAdapter
         binding.transferToAccount.adapter = accountAdapter
+        binding.transferCategory.adapter = categoryAdapter
 
         // Date Pickers
         binding.expenseDate.setOnClickListener { showDatePicker(binding.expenseDate) }
@@ -75,9 +94,43 @@ class AddRecordFragment : Fragment() {
         binding.transferDate.setOnClickListener { showDatePicker(binding.transferDate) }
 
         // Submit buttons
-        binding.submitExpense.setOnClickListener { addExpense() }
-        binding.submitIncome.setOnClickListener { addIncome() }
-        binding.submitTransfer.setOnClickListener { addTransfer() }
+        binding.submitExpense.setOnClickListener { addOrUpdateExpense() }
+        binding.submitIncome.setOnClickListener { addOrUpdateIncome() }
+        binding.submitTransfer.setOnClickListener { addOrUpdateTransfer() }
+
+        // Pre-fill form if editing
+        recordToEdit?.let { record ->
+            when (record.type) {
+                "Expense" -> {
+                    binding.expenseSection.visibility = View.VISIBLE
+                    binding.incomeSection.visibility = View.GONE
+                    binding.transferSection.visibility = View.GONE
+                    binding.expenseAmount.setText(record.amount.toString())
+                    binding.expenseAccount.setSelection(accounts.indexOf(record.account))
+                    binding.expenseCategory.setSelection(categories.indexOf(record.category))
+                    binding.expenseDate.setText(record.date)
+                }
+                "Income" -> {
+                    binding.expenseSection.visibility = View.GONE
+                    binding.incomeSection.visibility = View.VISIBLE
+                    binding.transferSection.visibility = View.GONE
+                    binding.incomeAmount.setText(record.amount.toString())
+                    binding.incomeAccount.setSelection(accounts.indexOf(record.account))
+                    binding.incomeCategory.setSelection(categories.indexOf(record.category))
+                    binding.incomeDate.setText(record.date)
+                }
+                "Transfer" -> {
+                    binding.expenseSection.visibility = View.GONE
+                    binding.incomeSection.visibility = View.GONE
+                    binding.transferSection.visibility = View.VISIBLE
+                    binding.transferAmount.setText(record.amount.toString())
+                    binding.transferFromAccount.setSelection(accounts.indexOf(record.account))
+                    binding.transferToAccount.setSelection(accounts.indexOf(record.toAccount))
+                    binding.transferCategory.setSelection(categories.indexOf(record.category))
+                    binding.transferDate.setText(record.date)
+                }
+            }
+        }
     }
 
     private fun showDatePicker(editText: EditText) {
@@ -95,7 +148,7 @@ class AddRecordFragment : Fragment() {
         datePicker.show()
     }
 
-    private fun addExpense() {
+    private fun addOrUpdateExpense() {
         val amountText = binding.expenseAmount.text.toString().replace("$", "").trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
@@ -111,12 +164,17 @@ class AddRecordFragment : Fragment() {
             return
         }
 
-        dataManager.addRecord(Record(date, category, -amount, account, "Expense"))
-        Toast.makeText(context, "Expense added", Toast.LENGTH_SHORT).show()
+        val record = Record(date, category, -amount, account, "Expense")
+        if (recordToEdit != null) {
+            updateRecord(record)
+        } else {
+            dataManager.addRecord(record)
+        }
+        Toast.makeText(context, if (recordToEdit != null) "Expense updated" else "Expense added", Toast.LENGTH_SHORT).show()
         parentFragmentManager.popBackStack()
     }
 
-    private fun addIncome() {
+    private fun addOrUpdateIncome() {
         val amountText = binding.incomeAmount.text.toString().replace("$", "").trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
@@ -132,12 +190,17 @@ class AddRecordFragment : Fragment() {
             return
         }
 
-        dataManager.addRecord(Record(date, category, amount, account, "Income"))
-        Toast.makeText(context, "Income added", Toast.LENGTH_SHORT).show()
+        val record = Record(date, category, amount, account, "Income")
+        if (recordToEdit != null) {
+            updateRecord(record)
+        } else {
+            dataManager.addRecord(record)
+        }
+        Toast.makeText(context, if (recordToEdit != null) "Income updated" else "Income added", Toast.LENGTH_SHORT).show()
         parentFragmentManager.popBackStack()
     }
 
-    private fun addTransfer() {
+    private fun addOrUpdateTransfer() {
         val amountText = binding.transferAmount.text.toString().replace("$", "").trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
@@ -146,6 +209,7 @@ class AddRecordFragment : Fragment() {
         }
         val fromAccount = binding.transferFromAccount.selectedItem.toString()
         val toAccount = binding.transferToAccount.selectedItem.toString()
+        val category = binding.transferCategory.selectedItem.toString()
         val date = binding.transferDate.text.toString()
 
         if (date.isEmpty()) {
@@ -157,10 +221,23 @@ class AddRecordFragment : Fragment() {
             return
         }
 
-        // Add a single transfer record with both from and to accounts
-        dataManager.addRecord(Record(date, "Transfer", amount, fromAccount, "Transfer", toAccount))
-        Toast.makeText(context, "Transfer added", Toast.LENGTH_SHORT).show()
+        val record = Record(date, category, amount, fromAccount, "Transfer", toAccount)
+        if (recordToEdit != null) {
+            updateRecord(record)
+        } else {
+            dataManager.addRecord(record)
+        }
+        Toast.makeText(context, if (recordToEdit != null) "Transfer updated" else "Transfer added", Toast.LENGTH_SHORT).show()
         parentFragmentManager.popBackStack()
+    }
+
+    private fun updateRecord(newRecord: Record) {
+        val records = dataManager.getRecords().toMutableList()
+        val index = records.indexOf(recordToEdit)
+        if (index != -1) {
+            records[index] = newRecord
+            dataManager.saveRecords(records)
+        }
     }
 
     override fun onDestroyView() {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#1C2526">
+    android:background="@color/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,22 +17,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="20dp">
 
             <TextView
                 android:id="@+id/date_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textColor="@color/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/menu_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@android:color/white"
+                app:tint="@color/colorPrimary"
                 android:contentDescription="@string/menu_description" />
         </LinearLayout>
 
@@ -41,16 +42,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#2A2F31"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
+            android:background="@drawable/gradient_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/total_balance"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textColor="@color/colorGrayLight"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,16 +67,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
-                    android:textSize="24sp"
+                    android:textColor="@color/colorOnSurface"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/account_dropdown"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/arrow_down_float"
-                    app:tint="@android:color/white"
+                    app:tint="@color/colorPrimary"
                     android:contentDescription="@string/select_account" />
             </LinearLayout>
         </LinearLayout>
@@ -83,9 +86,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#2A2F31"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
+            android:background="@drawable/gradient_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,44 +102,60 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/budget"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@color/colorGrayLight"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/all_budgets"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/all_budgets"
-                    android:textColor="#6A5ACD"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/budget_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/budget_spent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
-            <!-- Progress Bar -->
-            <ProgressBar
-                android:id="@+id/budget_progress"
-                style="@android:style/Widget.ProgressBar.Horizontal"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:progressTint="#6A5ACD"
-                android:progressBackgroundTint="#3A3F41" />
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Circular Progress Bar -->
+                <ProgressBar
+                    android:id="@+id/budget_progress"
+                    style="@android:style/Widget.ProgressBar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="16dp"
+                    android:progressDrawable="@drawable/progress_circle"
+                    android:indeterminate="false"
+                    android:max="100" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/budget_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/budget_spent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/colorGrayMedium"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <!-- Budget Categories -->
             <LinearLayout
@@ -157,14 +177,15 @@
                         android:id="@+id/entertainment_spent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/entertainment"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/colorGrayMedium"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -180,14 +201,15 @@
                         android:id="@+id/food_spent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/food"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/colorGrayMedium"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -203,25 +225,29 @@
                         android:id="@+id/fuel_spent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fuel"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/colorGrayMedium"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Category Section (Circular Chart) -->
+        <!-- Category Section (Placeholder for Pie Chart) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="16dp">
+            android:background="@drawable/gradient_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,37 +260,72 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/categories"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@color/colorGrayLight"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/statistics"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/statistics"
-                    android:textColor="#6A5ACD"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Placeholder for Circular Chart -->
-            <TextView
-                android:id="@+id/expense_chart"
-                android:layout_width="wrap_content"
+            <!-- Placeholder for Pie Chart -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/expense_breakdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                <!-- Circular Placeholder -->
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginEnd="16dp">
+
+                    <View
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:background="@drawable/circle_background"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="61%"
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/expense_chart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/expense_breakdown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/colorGrayLight"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Last Records Section -->
@@ -278,8 +339,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/last_records"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
             <!-- Record 1 -->
@@ -288,16 +350,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
-                android:background="#2A2F31"
-                android:layout_marginBottom="4dp">
+                android:padding="12dp"
+                android:background="@drawable/gradient_background"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
+                android:elevation="2dp">
 
                 <TextView
                     android:id="@+id/record_1_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="14sp" />
 
                 <TextView
@@ -305,14 +369,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorGrayLight"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/record_1_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF5555"
+                    android:textColor="@color/colorError"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -322,16 +386,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
-                android:background="#2A2F31"
-                android:layout_marginBottom="4dp">
+                android:padding="12dp"
+                android:background="@drawable/gradient_background"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
+                android:elevation="2dp">
 
                 <TextView
                     android:id="@+id/record_2_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="14sp" />
 
                 <TextView
@@ -339,14 +405,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorGrayLight"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/record_2_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF5555"
+                    android:textColor="@color/colorError"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -356,15 +422,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
-                android:background="#2A2F31">
+                android:padding="12dp"
+                android:background="@drawable/gradient_background"
+                android:visibility="gone"
+                android:elevation="2dp">
 
                 <TextView
                     android:id="@+id/record_3_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="14sp" />
 
                 <TextView
@@ -372,14 +440,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorGrayLight"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/record_3_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF5555"
+                    android:textColor="@color/colorError"
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
@@ -389,16 +457,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_account"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorGrayLight"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#2A2F31"
-            android:padding="16dp">
+            android:background="@drawable/gradient_background"
+            android:padding="16dp"
+            android:elevation="4dp">
 
             <!-- Total Account -->
             <LinearLayout
@@ -406,29 +476,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:background="@android:color/transparent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/account_total_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/account_total_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -438,29 +508,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:background="@android:color/transparent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@drawable/cards"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/account_credit_card_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/account_credit_card_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -470,29 +540,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:background="@android:color/transparent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@drawable/cards"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/account_debit_card_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/account_debit_card_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -502,32 +572,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:background="@android:color/transparent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/account_cash_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/account_cash_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

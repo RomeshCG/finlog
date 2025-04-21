@@ -85,14 +85,19 @@ class HomeFragment : Fragment() {
         val budgetAllocated = dataManager.getTotalBudgetAllocated()
         binding.budgetLeft.text = "$${String.format("%.2f", budgetLeft)} left"
         binding.budgetSpent.text = "$${String.format("%.2f", budgetSpent)} spent"
-        binding.budgetProgress.max = budgetAllocated.toInt()
-        binding.budgetProgress.progress = budgetSpent.toInt()
+        // Circular ProgressBar uses 0-100 scale
+        val progressPercentage = if (budgetAllocated > 0) {
+            ((budgetSpent / budgetAllocated) * 100).toInt()
+        } else {
+            0
+        }
+        binding.budgetProgress.progress = progressPercentage
 
         // Update budget categories
         val categories = dataManager.getBudgetCategories()
-        binding.entertainmentSpent.text = "$${String.format("%.2f", categories[0].spent)} spent"
-        binding.foodSpent.text = "$${String.format("%.2f", categories[1].spent)} spent"
-        binding.fuelSpent.text = "$${String.format("%.2f", categories[2].spent)} spent"
+        binding.entertainmentSpent.text = "$${String.format("%.2f", categories[0].spent)}"
+        binding.foodSpent.text = "$${String.format("%.2f", categories[1].spent)}"
+        binding.fuelSpent.text = "$${String.format("%.2f", categories[2].spent)}"
 
         // Update expense chart
         binding.expenseChart.text = "Expense\n$${String.format("%.2f", budgetSpent)}"
@@ -107,16 +112,25 @@ class HomeFragment : Fragment() {
             binding.record1Date.text = records[0].date
             binding.record1Category.text = records[0].category
             binding.record1Amount.text = "$${String.format("%.2f", records[0].amount)}"
+            binding.record1Amount.setTextColor(
+                if (records[0].amount >= 0) 0xFF5AF2A2.toInt() else 0xFFFF5252.toInt()
+            )
         }
         if (records.size > 1) {
             binding.record2Date.text = records[1].date
             binding.record2Category.text = records[1].category
             binding.record2Amount.text = "$${String.format("%.2f", records[1].amount)}"
+            binding.record2Amount.setTextColor(
+                if (records[1].amount >= 0) 0xFF5AF2A2.toInt() else 0xFFFF5252.toInt()
+            )
         }
         if (records.size > 2) {
             binding.record3Date.text = records[2].date
             binding.record3Category.text = records[2].category
             binding.record3Amount.text = "$${String.format("%.2f", records[2].amount)}"
+            binding.record3Amount.setTextColor(
+                if (records[2].amount >= 0) 0xFF5AF2A2.toInt() else 0xFFFF5252.toInt()
+            )
         }
 
         // Update account list

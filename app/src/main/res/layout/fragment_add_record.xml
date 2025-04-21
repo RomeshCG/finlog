@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#1C2526"
+    android:background="@color/colorBackground"
     android:padding="16dp">
 
     <!-- Toggle Buttons for Expense, Income, Transfer -->
@@ -21,8 +21,8 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:text="@string/expense"
-            android:backgroundTint="#FF5555"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorError"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
 
@@ -33,8 +33,8 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:text="@string/income"
-            android:backgroundTint="#55FF55"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
 
@@ -44,8 +44,8 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/transfer"
-            android:backgroundTint="#5555FF"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
     </LinearLayout>
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="$400.32"
-            android:textColor="#FF5555"
+            android:textColor="@color/colorError"
             android:textSize="32sp"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
@@ -75,14 +75,14 @@
             android:id="@+id/expense_account"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <Spinner
             android:id="@+id/expense_category"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <EditText
@@ -90,9 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="@string/select_date"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            android:backgroundTint="@android:color/white"
+            android:textColor="@color/colorOnSurface"
+            android:textColorHint="@color/colorGrayMedium"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="24dp"
             android:enabled="true"
             android:focusable="false"
@@ -103,8 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/add_record"
-            android:backgroundTint="#6A5ACD"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
     </LinearLayout>
@@ -122,7 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="$3,400.90"
-            android:textColor="#55FF55"
+            android:textColor="@color/colorAccent"
             android:textSize="32sp"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
@@ -134,14 +134,14 @@
             android:id="@+id/income_account"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <Spinner
             android:id="@+id/income_category"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <EditText
@@ -149,9 +149,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="@string/select_date"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            android:backgroundTint="@android:color/white"
+            android:textColor="@color/colorOnSurface"
+            android:textColorHint="@color/colorGrayMedium"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="24dp"
             android:enabled="true"
             android:focusable="false"
@@ -162,8 +162,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/add_record"
-            android:backgroundTint="#6A5ACD"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
     </LinearLayout>
@@ -181,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="$60.21"
-            android:textColor="#5555FF"
+            android:textColor="@color/colorPrimary"
             android:textSize="32sp"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
@@ -193,14 +193,21 @@
             android:id="@+id/transfer_from_account"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <Spinner
             android:id="@+id/transfer_to_account"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="@color/colorGrayLight"
+            android:layout_marginBottom="16dp" />
+
+        <Spinner
+            android:id="@+id/transfer_category"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="16dp" />
 
         <EditText
@@ -208,9 +215,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="@string/select_date"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            android:backgroundTint="@android:color/white"
+            android:textColor="@color/colorOnSurface"
+            android:textColorHint="@color/colorGrayMedium"
+            android:backgroundTint="@color/colorGrayLight"
             android:layout_marginBottom="24dp"
             android:enabled="true"
             android:focusable="false"
@@ -221,8 +228,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/add_record"
-            android:backgroundTint="#6A5ACD"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnSurface"
             android:textSize="16sp"
             android:padding="12dp" />
     </LinearLayout>

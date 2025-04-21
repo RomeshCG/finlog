@@ -13,6 +13,9 @@ class NavigationActivity : AppCompatActivity() {
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Hide the action bar (removes the "FinLog" title)
+        supportActionBar?.hide()
+
         // Load HomeFragment on start
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -54,10 +57,14 @@ class NavigationActivity : AppCompatActivity() {
 
         // Handle FAB click to open AddRecordFragment
         binding.fabAdd.setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AddRecordFragment())
-                .addToBackStack(null)
-                .commit()
+            // Check if AddRecordFragment is already the current fragment
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is AddRecordFragment) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, AddRecordFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
     }
 }
