@@ -3,15 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="#1C2526">
+    android:background="@color/colorBackground"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cards Fragment"
-        android:textSize="20sp"
-        android:textColor="@android:color/white" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/wallet_cards"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/add_card_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_menu_add"
+            android:tint="@color/colorPrimary"
+            android:contentDescription="@string/add_card" />
+    </LinearLayout>
+
+    <!-- RecyclerView for Cards -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cards_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>
