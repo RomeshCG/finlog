@@ -11,12 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Finlog"
         tools:targetApi="31">
-        <activity
-            android:name=".dialog_card_details"
-            android:exported="false" />
-        <activity
-            android:name=".item_card"
-            android:exported="false" />
+
         <activity
             android:name=".NavigationActivity"
             android:exported="false" />
@@ -30,5 +25,8 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

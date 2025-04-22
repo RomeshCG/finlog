@@ -3,15 +3,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="#1C2526">
+    android:padding="16dp"
+    android:gravity="center">
 
     <TextView
-        android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Menu Fragment"
-        android:textSize="20sp"
-        android:textColor="@android:color/white" />
+        android:text="Menu"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btn_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Backup"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Backup to Restore:"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinner_backups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_restore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Restore Backup"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Support"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_privacy_policy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Privacy Policy"
+        android:layout_marginBottom="16dp"/>
+
 
 </LinearLayout>

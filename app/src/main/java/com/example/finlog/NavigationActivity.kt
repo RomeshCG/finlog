@@ -7,11 +7,15 @@ import com.example.finlog.databinding.ActivityNavigationBinding
 class NavigationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNavigationBinding
+    private lateinit var dataManager: DataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize DataManager
+        dataManager = DataManager(this)
 
         // Hide the action bar (removes the "FinLog" title)
         supportActionBar?.hide()
@@ -57,7 +61,7 @@ class NavigationActivity : AppCompatActivity() {
 
         // Handle FAB click to open AddRecordFragment
         binding.fabAdd.setOnClickListener {
-            // Check if AddRecordFragment is already the current fragment
+            // Check the current fragment
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is AddRecordFragment) {
                 supportFragmentManager.beginTransaction()

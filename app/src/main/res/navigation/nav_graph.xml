@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home Fragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.finlog.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_recordsFragment"
+            app:destination="@id/recordsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cardsFragment"
+            app:destination="@id/cardsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addRecordFragment"
+            app:destination="@id/addRecordFragment" />
+    </fragment>
+
+    <!-- Records Fragment -->
+    <fragment
+        android:id="@+id/recordsFragment"
+        android:name="com.example.finlog.RecordsFragment"
+        android:label="Records">
+        <action
+            android:id="@+id/action_recordsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_recordsFragment_to_cardsFragment"
+            app:destination="@id/cardsFragment" />
+        <action
+            android:id="@+id/action_recordsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_recordsFragment_to_addRecordFragment"
+            app:destination="@id/addRecordFragment" />
+    </fragment>
+
+    <!-- Cards Fragment -->
+    <fragment
+        android:id="@+id/cardsFragment"
+        android:name="com.example.finlog.CardsFragment"
+        android:label="Cards">
+        <action
+            android:id="@+id/action_cardsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_cardsFragment_to_recordsFragment"
+            app:destination="@id/recordsFragment" />
+        <action
+            android:id="@+id/action_cardsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_cardsFragment_to_addRecordFragment"
+            app:destination="@id/addRecordFragment" />
+    </fragment>
+
+    <!-- Menu Fragment -->
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.finlog.MenuFragment"
+        android:label="Menu">
+        <action
+            android:id="@+id/action_menuFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_recordsFragment"
+            app:destination="@id/recordsFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_cardsFragment"
+            app:destination="@id/cardsFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_privacyPolicyFragment"
+            app:destination="@id/privacyPolicyFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_supportFragment"
+            app:destination="@id/supportFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_addRecordFragment"
+            app:destination="@id/addRecordFragment" />
+    </fragment>
+
+    <!-- Privacy Policy Fragment -->
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.example.finlog.PrivacyPolicyFragment"
+        android:label="Privacy Policy">
+        <action
+            android:id="@+id/action_privacyPolicyFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+    </fragment>
+
+    <!-- Support Fragment -->
+    <fragment
+        android:id="@+id/supportFragment"
+        android:name="com.example.finlog.SupportFragment"
+        android:label="Support">
+        <action
+            android:id="@+id/action_supportFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+    </fragment>
+
+    <!-- AddRecordFragment for adding/editing records -->
+    <fragment
+        android:id="@+id/addRecordFragment"
+        android:name="com.example.finlog.AddRecordFragment"
+        android:label="Add Record">
+        <action
+            android:id="@+id/action_addRecordFragment_to_recordsFragment"
+            app:destination="@id/recordsFragment"
+            app:popUpTo="@id/recordsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_addRecordFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_addRecordFragment_to_cardsFragment"
+            app:destination="@id/cardsFragment"
+            app:popUpTo="@id/cardsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_addRecordFragment_to_menuFragment"
+            app:destination="@id/menuFragment"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

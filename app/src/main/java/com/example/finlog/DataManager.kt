@@ -2,6 +2,7 @@ package com.example.finlog
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -37,6 +38,7 @@ data class Card(
 
 // Data class for backup
 data class BackupData(
+    val timestamp: String,
     val records: List<Record>,
     val cards: List<Card>
 )
@@ -69,12 +71,14 @@ class DataManager(context: Context) {
         Card("Debit Card", "9876543210981234", "JOHN DOE", "456", 8000.00)
     )
 
-    // Keys for SharedPreferences
+    // Keys for SharedPreferences and backup file prefix
     companion object {
         private const val KEY_SELECTED_ACCOUNT = "selected_account"
         private const val KEY_RECORDS = "records"
         private const val KEY_CARDS = "cards"
-        private const val BACKUP_FILE_NAME = "finlog_backup.json"
+        private const val BACKUP_FILE_PREFIX = "finlog_backup_"
+        private const val BACKUP_FILE_EXTENSION = ".json"
+        private const val TAG = "DataManager"
     }
 
     init {
@@ -192,27 +196,82 @@ class DataManager(context: Context) {
         sharedPreferences.edit().putString(KEY_CARDS, cardsJson).apply()
     }
 
-    // Create a backup of all data
-    fun createBackup() {
+    // Create a backup of all data with a timestamped filename
+    fun createBackup(): String {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val backupData = BackupData(
+            timestamp = timestamp,
             records = getRecords(),
             cards = getCards()
         )
         val backupJson = gson.toJson(backupData)
-        val backupFile = File(appContext.filesDir, BACKUP_FILE_NAME)
+        val backupFileName = "${BACKUP_FILE_PREFIX}${timestamp}${BACKUP_FILE_EXTENSION}"
+        val backupFile = File(appContext.filesDir, backupFileName)
         backupFile.writeText(backupJson)
+        Log.d(TAG, "Created backup: $backupFileName at ${backupFile.absolutePath}")
+        return backupFileName
     }
 
-    // Restore data from a backup
-    fun restoreBackup() {
-        val backupFile = File(appContext.filesDir, BACKUP_FILE_NAME)
+    // Restore data from a specific backup file
+    fun restoreBackup(backupFileName: String) {
+        val backupFile = File(appContext.filesDir, backupFileName)
+        Log.d(TAG, "Attempting to restore from: ${backupFile.absolutePath}")
         if (!backupFile.exists()) {
-            throw Exception("No backup file found")
+            Log.e(TAG, "Backup file does not exist: $backupFileName")
+            throw Exception("Backup file not found: $backupFileName")
         }
         val backupJson = backupFile.readText()
+        Log.d(TAG, "Backup file contents: $backupJson")
         val type = object : TypeToken<BackupData>() {}.type
         val backupData: BackupData = gson.fromJson(backupJson, type)
         saveRecords(backupData.records)
         saveCards(backupData.cards)
+        Log.d(TAG, "Restored backup: $backupFileName")
+    }
+
+    // Get a list of all backup files
+    fun getBackupFiles(): List<String> {
+        val filesDir = appContext.filesDir
+        val backupFiles = filesDir.listFiles { _, name ->
+            name.startsWith(BACKUP_FILE_PREFIX) && name.endsWith(BACKUP_FILE_EXTENSION)
+        }
+        val fileList = backupFiles?.map { it.name }?.sortedByDescending { it } ?: emptyList()
+        Log.d(TAG, "Found backup files: $fileList")
+        return fileList
+    }
+
+    // Get the timestamp of a specific backup and format it
+    fun getBackupTimestamp(backupFileName: String): String {
+        val backupFile = File(appContext.filesDir, backupFileName)
+        if (!backupFile.exists()) {
+            Log.e(TAG, "Cannot get timestamp, backup file not found: $backupFileName")
+            return "Unknown"
+        }
+        val backupJson = backupFile.readText()
+        val type = object : TypeToken<BackupData>() {}.type
+        val backupData: BackupData = gson.fromJson(backupJson, type)
+        // Parse the timestamp (yyyyMMdd_HHmmss) and format it as "dd MMM yyyy, HH:mm:ss"
+        return try {
+            val inputFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd MMM yyyy, HH:mm:ss", Locale.getDefault())
+            val date = inputFormat.parse(backupData.timestamp)
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse timestamp ${backupData.timestamp}: ${e.message}")
+            "Unknown"
+        }
+    }
+
+    // Delete a specific backup file
+    fun deleteBackup(backupFileName: String): Boolean {
+        val backupFile = File(appContext.filesDir, backupFileName)
+        return if (backupFile.exists()) {
+            val deleted = backupFile.delete()
+            Log.d(TAG, "Deleted backup $backupFileName: $deleted")
+            deleted
+        } else {
+            Log.e(TAG, "Cannot delete, backup file not found: $backupFileName")
+            false
+        }
     }
 }
