@@ -24,6 +24,7 @@ data class Record(
     val amount: Double,
     val account: String,
     val type: String,
+    val title: String,
     val toAccount: String? = null
 ) : Serializable
 
@@ -86,9 +87,9 @@ class DataManager(context: Context) {
         val records = getRecords()
         if (records.isEmpty()) {
             val testRecords = listOf(
-                Record("20 Apr 2025", "Food", -6.21, "Cash", "Expense"),
-                Record("19 Apr 2025", "Salary", 3400.90, "Debit Card", "Income"),
-                Record("18 Apr 2025", "Transfer", 60.21, "Credit Card", "Transfer", "Cash")
+                Record("20 Apr 2025", "Food", -6.21, "Cash", "Expense", "Lunch at Cafe"),
+                Record("19 Apr 2025", "Salary", 3400.90, "Debit Card", "Income", "Monthly Salary"),
+                Record("18 Apr 2025", "Transfer", 60.21, "Credit Card", "Transfer", "Cash Withdrawal", "Cash")
             )
             saveRecords(testRecords)
         }

@@ -20,13 +20,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/record_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/record_amount"
+        app:layout_constraintTop_toBottomOf="@id/record_date" />
+
+    <TextView
         android:id="@+id/record_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorGrayLight"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/record_date"
+        app:layout_constraintTop_toBottomOf="@id/record_title"
         android:layout_marginTop="4dp" />
 
     <TextView
@@ -37,7 +49,7 @@
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/record_category"
-        app:layout_constraintTop_toBottomOf="@id/record_date"
+        app:layout_constraintTop_toBottomOf="@id/record_title"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp" />
 

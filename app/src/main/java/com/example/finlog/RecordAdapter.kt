@@ -22,6 +22,7 @@ class RecordAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(record: Record, position: Int) {
             binding.recordDate.text = record.date
+            binding.recordTitle.text = record.title
             binding.recordCategory.text = record.category
             binding.recordAmount.text = "$${String.format("%.2f", record.amount)}"
 

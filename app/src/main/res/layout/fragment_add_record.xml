@@ -90,6 +90,18 @@
                 android:gravity="center"
                 android:padding="8dp" />
 
+            <EditText
+                android:id="@+id/expense_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Enter title"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp"
+                android:inputType="text" />
+
             <Spinner
                 android:id="@+id/expense_account"
                 android:layout_width="match_parent"
@@ -151,6 +163,18 @@
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:padding="8dp" />
+
+            <EditText
+                android:id="@+id/income_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Enter title"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp"
+                android:inputType="text" />
 
             <Spinner
                 android:id="@+id/income_account"

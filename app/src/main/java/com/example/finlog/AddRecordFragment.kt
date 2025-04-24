@@ -158,13 +158,19 @@ class AddRecordFragment : Fragment() {
         val account = binding.expenseAccount.selectedItem.toString()
         val category = binding.expenseCategory.selectedItem.toString()
         val date = binding.expenseDate.text.toString()
+        val title = binding.expenseTitle.text.toString()
 
         if (date.isEmpty()) {
             Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val record = Record(date, category, -amount, account, "Expense")
+        if (title.isEmpty()) {
+            Toast.makeText(context, "Please enter a title", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val record = Record(date, category, -amount, account, "Expense", title)
         if (recordToEdit != null) {
             updateRecord(record)
         } else {
@@ -184,13 +190,19 @@ class AddRecordFragment : Fragment() {
         val account = binding.incomeAccount.selectedItem.toString()
         val category = binding.incomeCategory.selectedItem.toString()
         val date = binding.incomeDate.text.toString()
+        val title = binding.incomeTitle.text.toString()
 
         if (date.isEmpty()) {
             Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val record = Record(date, category, amount, account, "Income")
+        if (title.isEmpty()) {
+            Toast.makeText(context, "Please enter a title", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val record = Record(date, category, amount, account, "Income", title)
         if (recordToEdit != null) {
             updateRecord(record)
         } else {
