@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:fitsSystemWindows="true">
+    android:background="@color/colorBackground">
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_above="@+id/bottom_navigation_view" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorSurface"
         app:itemIconTint="@color/colorOnSurface"
         app:itemTextColor="@color/colorOnSurface"
@@ -27,15 +25,15 @@
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="72dp"
+        android:layout_above="@id/bottom_navigation_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-28dp"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/buttonBackground"
         app:elevation="8dp"
         app:fabSize="normal"
-        app:layout_anchor="@+id/bottom_navigation_view"
-        app:layout_anchorGravity="center"
         app:pressedTranslationZ="12dp"
-        app:tint="@color/buttonText" />
+        app:tint="@color/buttonText"
+        android:contentDescription="Add Record" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>
