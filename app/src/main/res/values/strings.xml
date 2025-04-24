@@ -6,9 +6,6 @@
     <string name="select_account">Select Account</string>
     <string name="budget">Budget</string>
     <string name="all_budgets">All Budgets</string>
-    <string name="entertainment">Entertainment</string>
-    <string name="food">Food</string>
-    <string name="fuel">Fuel</string>
     <string name="categories">Categories</string>
     <string name="statistics">Statistics</string>
     <string name="last_records">Last Records</string>
@@ -25,6 +22,34 @@
     <string name="cancel">Cancel</string>
     <string name="add_record">Add Record</string>
 
+    <!-- Budget Categories -->
+    <string name="housing">Housing</string>
+    <string name="transportation">Transportation</string>
+    <string name="food">Food</string>
+    <string name="utilities">Utilities</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="healthcare">Healthcare</string>
+    <string name="savings">Savings</string>
+    <string name="personal_care">Personal Care</string>
+    <string name="education">Education</string>
+    <string name="debt_payment">Debt Payment</string>
+    <string name="other">Other</string>
+
+    <!-- Monthly Summary -->
+    <string name="monthly_summary">Monthly Summary</string>
+    <string name="monthly_income">Income: %1$s</string>
+    <string name="monthly_expenses">Expenses: %1$s</string>
+    <string name="monthly_net">Net: %1$s</string>
+    <string name="budget_left">%1$s left</string>
+    <string name="budget_spent">%1$s spent</string>
+
+    <!-- Account Types -->
+    <string name="total">Total</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="debit_card">Debit Card</string>
+    <string name="cash">Cash</string>
+
+    <!-- Card Management -->
     <string name="wallet_cards">Wallet Cards</string>
     <string name="add_card">Add Card</string>
     <string name="add_new_card">Add New Card</string>
@@ -35,11 +60,32 @@
     <string name="add">Add</string>
     <string name="close">Close</string>
 
+    <!-- Menu Items -->
     <string name="menu">Menu</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="support">Support</string>
     <string name="create_backup">Create Backup</string>
     <string name="restore_backup">Restore Backup</string>
+
+    <!-- Form Labels -->
+    <string name="record_title">Record Title</string>
+    <string name="account_label">Account</string>
+    <string name="from_account_label">From Account</string>
+    <string name="to_account_label">To Account</string>
+    <string name="category_label">Category</string>
+    <string name="amount_label">Amount</string>
+    <string name="date_label">Date</string>
+
+    <!-- Validation Messages -->
+    <string name="error_title_required">Please enter a title</string>
+    <string name="error_amount_required">Please enter a valid amount</string>
+    <string name="error_date_required">Please select a date</string>
+    <string name="error_insufficient_funds">Insufficient funds in %1$s</string>
+    <string name="error_same_account">From and To accounts must be different</string>
+    <string name="success_record_added">Record added successfully</string>
+    <string name="success_record_updated">Record updated successfully</string>
+    <string name="success_card_added">Card added successfully</string>
+    <string name="success_card_deleted">Card deleted successfully</string>
 
     <!-- Privacy Policy Content -->
     <string name="privacy_policy_content">
