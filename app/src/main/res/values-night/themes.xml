@@ -1,6 +1,0 @@
-<resources>
-    <!-- Base application theme -->
-    <style name="Theme.Finlog" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:statusBarColor">@color/status_bar_color</item>
-    </style>
-</resources>
