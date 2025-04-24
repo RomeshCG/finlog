@@ -64,27 +64,6 @@ class DataManager(context: Context) {
     private val gson = Gson()
     private val appContext = context
 
-    // List of accounts with initial balances (excluding card balances for now)
-    private val baseAccounts = listOf(
-        Account("Total", 0.00), // Will be updated dynamically
-        Account("Credit Card", 0.00),
-        Account("Debit Card", 0.00),
-        Account("Cash", 0.00) // Initial cash balance will be calculated from records
-    )
-
-    // Budget categories with initial spent and total values
-    private val budgetCategories = listOf(
-        BudgetCategory("Entertainment", 3430.00, 5000.00),
-        BudgetCategory("Food", 430.00, 1000.00),
-        BudgetCategory("Fuel", 150.00, 500.00)
-    )
-
-    // Initial cards (Balances will be updated from records)
-    private val initialCards = listOf(
-        Card("Credit Card", "1234567890121234", "JOHN DOE", "123", 0.0),
-        Card("Debit Card", "9876543210981234", "JOHN DOE", "456", 0.0)
-    )
-
     // Keys for SharedPreferences and backup file prefix
     companion object {
         private const val KEY_SELECTED_ACCOUNT = "selected_account"
@@ -98,50 +77,13 @@ class DataManager(context: Context) {
         private const val KEY_NOTIFIED_TOTAL_PREFIX = "notified_total_"
         private const val KEY_NOTIFIED_CATEGORY_PREFIX = "notified_category_"
         private const val BUDGET_NOTIFICATION_ID = 1 // Unique ID for budget notifications
-        // Default Categories if none are saved
-        private val DEFAULT_CATEGORIES = listOf("Entertainment", "Food", "Fuel", "Salary", "Transfer", "Other")
     }
 
     init {
-        // Add test records if none exist
-        val records = getRecords()
-        if (records.isEmpty()) {
-            val testRecords = listOf(
-                Record("20 Apr 2025", "Food", -6.21, "Cash", "Expense", "Lunch at Cafe"),
-                Record("19 Apr 2025", "Salary", 3400.90, "Debit Card", "Income", "Monthly Salary"),
-                Record("18 Apr 2025", "Transfer", -60.21, "Credit Card", "Transfer", "Cash Withdrawal", "Cash"), // Negative from Credit Card
-                Record("18 Apr 2025", "Transfer", 60.21, "Cash", "Transfer", "Cash Withdrawal", "Credit Card")     // Positive to Cash
-            )
-            saveRecords(testRecords) // This will also trigger updateCardBalances
-        } else {
-            updateCardBalances() // Ensure balances are correct on startup
-        }
-
-        // Add initial cards if none exist (balances will be calculated)
-        val cards = getCards()
-        if (cards.isEmpty()) {
-            saveCards(initialCards)
-            updateCardBalances() // Calculate initial balances
-        }
-
-        // Ensure default categories exist if none are saved
-        if (getUserCategories().isEmpty()) {
-            saveUserCategories(DEFAULT_CATEGORIES)
-        }
-        // Ensure default budget includes default categories
-        val currentBudget = getMonthlyBudget()
-        val currentCategories = getUserCategories()
-        val budgetNeedsUpdate = currentCategories.any { !currentBudget.categories.containsKey(it) }
-        if (budgetNeedsUpdate) {
-            val updatedCategories = currentBudget.categories.toMutableMap()
-            currentCategories.forEach { category ->
-                if (!updatedCategories.containsKey(category)) {
-                    updatedCategories[category] = 0.0 // Add new categories with 0 budget initially
-                }
-            }
-            saveMonthlyBudget(currentBudget.copy(categories = updatedCategories))
-            Log.d(TAG, "Updated monthly budget to include new default categories.")
-        }
+        // We might still want to ensure balances are calculated on first launch if any data *did* exist
+        // but with no defaults, this likely isn't strictly necessary unless restoring a backup.
+        // Consider calling updateCardBalances() here if needed for edge cases or after restore.
+        Log.d(TAG, "DataManager initialized - No default data added.")
     }
 
     // Get monthly budget from SharedPreferences or return default
@@ -161,11 +103,10 @@ class DataManager(context: Context) {
 
     // Provides a default monthly budget
     private fun getDefaultMonthlyBudget(): MonthlyBudget {
-        val categories = getUserCategories()
-        val defaultCategoryBudget = categories.associateWith { 0.0 } // Default all to 0
+        Log.d(TAG, "Providing default empty monthly budget.")
         return MonthlyBudget(
-            total = 1000.00, // Default total budget
-            categories = defaultCategoryBudget
+            total = 0.0, // Start with zero budget
+            categories = emptyMap() // Start with no category budgets
         )
     }
 
@@ -261,9 +202,6 @@ class DataManager(context: Context) {
         // Create a map to hold calculated balances for each card type
         val calculatedBalances = mutableMapOf<String, Double>()
 
-        // Initialize balances from initial card data if available (though records should override)
-        initialCards.forEach { calculatedBalances[it.type] = it.balance }
-
         // Aggregate amounts from records for each card account
         records.forEach { record ->
             // Update balance for the primary account involved in the record
@@ -320,16 +258,16 @@ class DataManager(context: Context) {
     }
 
     // Get budget categories
-    fun getBudgetCategories(): List<BudgetCategory> = budgetCategories
+    fun getBudgetCategories(): List<BudgetCategory> = emptyList()
 
     // Get total budget spent
-    fun getTotalBudgetSpent(): Double = budgetCategories.sumOf { it.spent }
+    fun getTotalBudgetSpent(): Double = 0.0
 
     // Get total budget allocated
-    fun getTotalBudgetAllocated(): Double = budgetCategories.sumOf { it.total }
+    fun getTotalBudgetAllocated(): Double = 0.0
 
     // Get budget left
-    fun getBudgetLeft(): Double = getTotalBudgetAllocated() - getTotalBudgetSpent()
+    fun getBudgetLeft(): Double = 0.0
 
     // Get all records from SharedPreferences
     fun getRecords(): List<Record> {
@@ -505,13 +443,14 @@ class DataManager(context: Context) {
         return if (json != null) {
             try {
                 val type = object : TypeToken<List<String>>() {}.type
-                gson.fromJson(json, type) ?: DEFAULT_CATEGORIES
+                // Return empty list if parsing fails or no data
+                gson.fromJson(json, type) ?: emptyList()
             } catch (e: Exception) {
                 Log.e(TAG, "Error parsing user categories JSON: $json", e)
-                DEFAULT_CATEGORIES
+                emptyList()
             }
         } else {
-            DEFAULT_CATEGORIES
+            emptyList() // Return empty list if key doesn't exist
         }
     }
 
