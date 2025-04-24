@@ -1,236 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorBackground"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <!-- Toggle Buttons for Expense, Income, Transfer -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="24dp">
-
-        <Button
-            android:id="@+id/btn_expense"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="@string/expense"
-            android:backgroundTint="@color/colorError"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
-
-        <Button
-            android:id="@+id/btn_income"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="@string/income"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
-
-        <Button
-            android:id="@+id/btn_transfer"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/transfer"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
-    </LinearLayout>
-
-    <!-- Expense Section -->
-    <LinearLayout
-        android:id="@+id/expense_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:background="@color/colorBackground"
+        android:padding="16dp">
 
-        <EditText
-            android:id="@+id/expense_amount"
+        <!-- Toggle Buttons for Expense, Income, Transfer -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$400.32"
-            android:textColor="@color/colorError"
-            android:textSize="32sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:inputType="numberDecimal"
-            android:background="@android:color/transparent"
-            android:gravity="center" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
 
-        <Spinner
-            android:id="@+id/expense_account"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <Button
+                android:id="@+id/btn_expense"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/expense"
+                android:backgroundTint="@color/colorError"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="12sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="false"
+                android:maxLines="2" />
 
-        <Spinner
-            android:id="@+id/expense_category"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <Button
+                android:id="@+id/btn_income"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/income"
+                android:backgroundTint="@color/colorAccent"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="12sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="false"
+                android:maxLines="2" />
 
-        <EditText
-            android:id="@+id/expense_date"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/select_date"
-            android:textColor="@color/colorOnSurface"
-            android:textColorHint="@color/colorGrayMedium"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="24dp"
-            android:enabled="true"
-            android:focusable="false"
-            android:clickable="true" />
+            <Button
+                android:id="@+id/btn_transfer"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:layout_weight="1"
+                android:text="@string/transfer"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="12sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:singleLine="false"
+                android:maxLines="2" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/submit_expense"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/add_record"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
-    </LinearLayout>
-
-    <!-- Income Section -->
-    <LinearLayout
-        android:id="@+id/income_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <EditText
-            android:id="@+id/income_amount"
+        <!-- Expense Section -->
+        <LinearLayout
+            android:id="@+id/expense_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$3,400.90"
-            android:textColor="@color/colorAccent"
-            android:textSize="32sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:inputType="numberDecimal"
-            android:background="@android:color/transparent"
-            android:gravity="center" />
+            android:orientation="vertical"
+            android:visibility="visible">
 
-        <Spinner
-            android:id="@+id/income_account"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <EditText
+                android:id="@+id/expense_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="$400.32"
+                android:textColor="@color/colorError"
+                android:textSize="32sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:inputType="numberDecimal"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:padding="8dp" />
 
-        <Spinner
-            android:id="@+id/income_category"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <Spinner
+                android:id="@+id/expense_account"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/income_date"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/select_date"
-            android:textColor="@color/colorOnSurface"
-            android:textColorHint="@color/colorGrayMedium"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="24dp"
-            android:enabled="true"
-            android:focusable="false"
-            android:clickable="true" />
+            <Spinner
+                android:id="@+id/expense_category"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
 
-        <Button
-            android:id="@+id/submit_income"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/add_record"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/expense_date"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="@string/select_date"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="24dp"
+                android:enabled="true"
+                android:focusable="false"
+                android:clickable="true" />
 
-    <!-- Transfer Section -->
-    <LinearLayout
-        android:id="@+id/transfer_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+            <Button
+                android:id="@+id/submit_expense"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
+                android:text="@string/add_record"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="16sp"
+                android:padding="12dp" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/transfer_amount"
+        <!-- Income Section -->
+        <LinearLayout
+            android:id="@+id/income_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$60.21"
-            android:textColor="@color/colorPrimary"
-            android:textSize="32sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:inputType="numberDecimal"
-            android:background="@android:color/transparent"
-            android:gravity="center" />
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <Spinner
-            android:id="@+id/transfer_from_account"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <EditText
+                android:id="@+id/income_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="$3,400.90"
+                android:textColor="@color/colorAccent"
+                android:textSize="32sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:inputType="numberDecimal"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:padding="8dp" />
 
-        <Spinner
-            android:id="@+id/transfer_to_account"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <Spinner
+                android:id="@+id/income_account"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
 
-        <Spinner
-            android:id="@+id/transfer_category"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="16dp" />
+            <Spinner
+                android:id="@+id/income_category"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/transfer_date"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/select_date"
-            android:textColor="@color/colorOnSurface"
-            android:textColorHint="@color/colorGrayMedium"
-            android:backgroundTint="@color/colorGrayLight"
-            android:layout_marginBottom="24dp"
-            android:enabled="true"
-            android:focusable="false"
-            android:clickable="true" />
+            <EditText
+                android:id="@+id/income_date"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="@string/select_date"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="24dp"
+                android:enabled="true"
+                android:focusable="false"
+                android:clickable="true" />
 
-        <Button
-            android:id="@+id/submit_transfer"
+            <Button
+                android:id="@+id/submit_income"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
+                android:text="@string/add_record"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="16sp"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- Transfer Section -->
+        <LinearLayout
+            android:id="@+id/transfer_section"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/add_record"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnSurface"
-            android:textSize="16sp"
-            android:padding="12dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/transfer_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="$60.21"
+                android:textColor="@color/colorPrimary"
+                android:textSize="32sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:inputType="numberDecimal"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:padding="8dp" />
+
+            <Spinner
+                android:id="@+id/transfer_from_account"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
+
+            <Spinner
+                android:id="@+id/transfer_to_account"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
+
+            <Spinner
+                android:id="@+id/transfer_category"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp" />
+
+            <EditText
+                android:id="@+id/transfer_date"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="@string/select_date"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="24dp"
+                android:enabled="true"
+                android:focusable="false"
+                android:clickable="true" />
+
+            <Button
+                android:id="@+id/submit_transfer"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
+                android:text="@string/add_record"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="16sp"
+                android:padding="12dp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

@@ -58,6 +58,6 @@
             android:layout_marginStart="16dp"
             android:src="@android:drawable/ic_delete"
             android:contentDescription="Delete Card"
-            app:tint="@color/red" /> 
+            app:tint="@color/red" />
     </LinearLayout>
 </LinearLayout>
