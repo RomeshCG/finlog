@@ -34,7 +34,7 @@ data class Card(
     val number: String,
     val holderName: String,
     val cvv: String,
-    val balance: Double
+    var balance: Double
 ) : Serializable
 
 // Data class for backup
@@ -106,7 +106,7 @@ class DataManager(context: Context) {
         val cards = getCards()
         val creditCardBalance = cards.filter { it.type == "Credit Card" }.sumOf { it.balance }
         val debitCardBalance = cards.filter { it.type == "Debit Card" }.sumOf { it.balance }
-        val cashBalance = baseAccounts.find { it.name == "Cash" }?.balance ?: 0.00
+        val cashBalance = calculateCashBalance()
         val totalBalance = creditCardBalance + debitCardBalance + cashBalance
 
         return listOf(
@@ -115,6 +115,35 @@ class DataManager(context: Context) {
             Account("Debit Card", debitCardBalance),
             Account("Cash", cashBalance)
         )
+    }
+
+    // Calculate cash balance based on records
+    private fun calculateCashBalance(): Double {
+        val records = getRecords()
+        return records.filter { it.account == "Cash" }
+            .sumOf { it.amount }
+    }
+
+    // Update card balances based on records
+    private fun updateCardBalances() {
+        val records = getRecords()
+        val cards = getCards().toMutableList()
+        
+        // Calculate new balances for each card type
+        val creditCardBalance = records.filter { it.account == "Credit Card" }
+            .sumOf { it.amount }
+        val debitCardBalance = records.filter { it.account == "Debit Card" }
+            .sumOf { it.amount }
+
+        // Update card balances
+        cards.forEach { card ->
+            when (card.type) {
+                "Credit Card" -> card.balance = creditCardBalance
+                "Debit Card" -> card.balance = debitCardBalance
+            }
+        }
+        
+        saveCards(cards)
     }
 
     // Get the currently selected account from SharedPreferences
@@ -156,12 +185,14 @@ class DataManager(context: Context) {
         val records = getRecords().toMutableList()
         records.add(record)
         saveRecords(records)
+        updateCardBalances() // Update card balances after adding record
     }
 
     // Save records (for deletion or updates)
     fun saveRecords(records: List<Record>) {
         val recordsJson = gson.toJson(records)
         sharedPreferences.edit().putString(KEY_RECORDS, recordsJson).apply()
+        updateCardBalances() // Update card balances after saving records
     }
 
     // Get last records (limit to 3 for display)
@@ -286,5 +317,15 @@ class DataManager(context: Context) {
             Log.e(TAG, "Cannot delete, backup file not found: $backupFileName")
             false
         }
+    }
+
+    // Get total balance
+    fun getTotalBalance(): Double {
+        return getAccounts().find { it.name == "Total" }?.balance ?: 0.0
+    }
+
+    // Get account balance by name
+    fun getAccountBalance(accountName: String): Double {
+        return getAccounts().find { it.name == accountName }?.balance ?: 0.0
     }
 }

@@ -238,6 +238,18 @@
                 android:gravity="center"
                 android:padding="8dp" />
 
+            <EditText
+                android:id="@+id/transfer_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Enter title"
+                android:textColor="@color/colorOnSurface"
+                android:textColorHint="@color/colorGrayMedium"
+                android:backgroundTint="@color/colorGrayLight"
+                android:layout_marginBottom="16dp"
+                android:inputType="text" />
+
             <Spinner
                 android:id="@+id/transfer_from_account"
                 android:layout_width="match_parent"

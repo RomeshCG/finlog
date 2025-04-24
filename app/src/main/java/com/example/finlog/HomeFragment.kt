@@ -71,6 +71,11 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
+
     private fun updateUI() {
         // Update date
         binding.dateText.text = dataManager.getCurrentDate()
@@ -85,8 +90,6 @@ class HomeFragment : Fragment() {
         val budgetAllocated = dataManager.getTotalBudgetAllocated()
         binding.budgetLeft.text = "$${String.format("%.2f", budgetLeft)} left"
         binding.budgetSpent.text = "$${String.format("%.2f", budgetSpent)} spent"
-
-
 
         // Update budget categories
         val categories = dataManager.getBudgetCategories()
@@ -141,11 +144,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun showAccountSelectionDialog() {
-        val accountNames = dataManager.getAccounts().map { it.name }.toTypedArray()
+        val accounts = dataManager.getAccounts()
+        val accountNames = accounts.map { it.name }.toTypedArray()
         AlertDialog.Builder(requireContext())
             .setTitle("Select Account")
             .setItems(accountNames) { _, which ->
-                dataManager.setSelectedAccount(dataManager.getAccounts()[which])
+                dataManager.setSelectedAccount(accounts[which])
                 updateUI()
             }
             .setNegativeButton("Cancel", null)

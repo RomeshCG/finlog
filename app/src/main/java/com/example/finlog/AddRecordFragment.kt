@@ -223,6 +223,7 @@ class AddRecordFragment : Fragment() {
         val toAccount = binding.transferToAccount.selectedItem.toString()
         val category = binding.transferCategory.selectedItem.toString()
         val date = binding.transferDate.text.toString()
+        val title = binding.transferTitle.text.toString()
 
         if (date.isEmpty()) {
             Toast.makeText(context, "Please select a date", Toast.LENGTH_SHORT).show()
@@ -232,12 +233,20 @@ class AddRecordFragment : Fragment() {
             Toast.makeText(context, "From and To accounts must be different", Toast.LENGTH_SHORT).show()
             return
         }
+        if (title.isEmpty()) {
+            Toast.makeText(context, "Please enter a title", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        val record = Record(date, category, amount, fromAccount, "Transfer", toAccount)
+        val fromRecord = Record(date, category, -amount, fromAccount, "Transfer", title, toAccount)
+        val toRecord = Record(date, category, amount, toAccount, "Transfer", title, fromAccount)
+        
         if (recordToEdit != null) {
-            updateRecord(record)
+            updateRecord(fromRecord)
+            dataManager.addRecord(toRecord)
         } else {
-            dataManager.addRecord(record)
+            dataManager.addRecord(fromRecord)
+            dataManager.addRecord(toRecord)
         }
         Toast.makeText(context, if (recordToEdit != null) "Transfer updated" else "Transfer added", Toast.LENGTH_SHORT).show()
         parentFragmentManager.popBackStack()
