@@ -85,13 +85,8 @@ class HomeFragment : Fragment() {
         val budgetAllocated = dataManager.getTotalBudgetAllocated()
         binding.budgetLeft.text = "$${String.format("%.2f", budgetLeft)} left"
         binding.budgetSpent.text = "$${String.format("%.2f", budgetSpent)} spent"
-        // Circular ProgressBar uses 0-100 scale
-        val progressPercentage = if (budgetAllocated > 0) {
-            ((budgetSpent / budgetAllocated) * 100).toInt()
-        } else {
-            0
-        }
-        binding.budgetProgress.progress = progressPercentage
+
+
 
         // Update budget categories
         val categories = dataManager.getBudgetCategories()

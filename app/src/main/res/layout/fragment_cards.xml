@@ -23,13 +23,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
+        <Button
             android:id="@+id/add_card_icon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@android:drawable/ic_menu_add"
-            android:tint="@color/colorPrimary"
-            android:contentDescription="@string/add_card" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_card"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
     </LinearLayout>
 
     <!-- RecyclerView for Cards -->
@@ -38,5 +40,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp" />
-
 </LinearLayout>

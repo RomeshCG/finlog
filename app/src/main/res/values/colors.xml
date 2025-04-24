@@ -27,4 +27,5 @@
     <color name="onboardingCard">#121212</color> <!-- Card-like surface -->
     <color name="transparentWhite">#99FFFFFF</color> <!-- Semi-transparent white -->
     <color name="colorBackgroundLight">#2A2A2A</color>
+    <color name="red">#FF0000</color>
 </resources>

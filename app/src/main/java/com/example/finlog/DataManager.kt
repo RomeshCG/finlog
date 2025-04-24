@@ -190,6 +190,18 @@ class DataManager(context: Context) {
         saveCards(cards)
     }
 
+    // Delete a card by card number and save to SharedPreferences
+    fun deleteCard(cardNumber: String) {
+        val cards = getCards().toMutableList()
+        val cardRemoved = cards.removeAll { it.number == cardNumber }
+        if (cardRemoved) {
+            saveCards(cards)
+            Log.d(TAG, "Card deleted: $cardNumber")
+        } else {
+            Log.e(TAG, "Card not found: $cardNumber")
+        }
+    }
+
     // Save cards
     fun saveCards(cards: List<Card>) {
         val cardsJson = gson.toJson(cards)

@@ -1,41 +1,54 @@
 package com.example.finlog
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.finlog.databinding.ItemCardBinding
 
 class CardAdapter(
-    private val cards: List<Card>,
-    private val onCardClick: (Card) -> Unit
+    private val cards: MutableList<Card>,
+    private val onCardClick: (Card) -> Unit,
+    private val onDeleteClick: (String) -> Unit
 ) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
 
+    class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardType: TextView = itemView.findViewById(R.id.card_type)
+        val cardNumber: TextView = itemView.findViewById(R.id.card_number)
+        val cardHolderName: TextView = itemView.findViewById(R.id.card_holder_name)
+        val cardCvv: TextView = itemView.findViewById(R.id.card_cvv)
+        val deleteIcon: ImageView = itemView.findViewById(R.id.delete_card_icon)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
-        val binding = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CardViewHolder(binding)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false)
+        return CardViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        holder.bind(cards[position])
+        val card = cards[position]
+        holder.cardType.text = card.type
+        holder.cardNumber.text = "**** **** **** ${card.number.takeLast(4)}" // Mask the card number
+        holder.cardHolderName.text = card.holderName
+        holder.cardCvv.text = "CVV: ${card.cvv}"
+
+        // Handle card click to show details
+        holder.itemView.setOnClickListener {
+            onCardClick(card)
+        }
+
+        // Handle delete icon click
+        holder.deleteIcon.setOnClickListener {
+            onDeleteClick(card.number)
+        }
     }
 
     override fun getItemCount(): Int = cards.size
 
-    inner class CardViewHolder(private val binding: ItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(card: Card) {
-            binding.cardType.text = card.type.uppercase()
-            // Mask the card number (show only last 4 digits)
-            val maskedNumber = "**** **** **** ${card.number.takeLast(4)}"
-            binding.cardNumber.text = maskedNumber
-            binding.cardHolderName.text = card.holderName
-            binding.cardCvv.text = "***" // Mask CVV
-            // Set background color based on card type
-            binding.root.backgroundTintList = when (card.type) {
-                "Credit Card" -> binding.root.context.getColorStateList(R.color.colorError)
-                "Debit Card" -> binding.root.context.getColorStateList(R.color.colorAccent)
-                else -> binding.root.context.getColorStateList(R.color.colorPrimary)
-            }
-            binding.root.setOnClickListener { onCardClick(card) }
-        }
+    fun updateCards(newCards: List<Card>) {
+        cards.clear()
+        cards.addAll(newCards)
+        notifyDataSetChanged()
     }
 }

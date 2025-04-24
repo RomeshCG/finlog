@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView // Added import
 import com.example.finlog.databinding.FragmentCardsBinding
 
 class CardsFragment : Fragment() {
@@ -35,13 +36,19 @@ class CardsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        cardAdapter = CardAdapter(dataManager.getCards()) { card ->
+        cardAdapter = CardAdapter(mutableListOf(), { card ->
             // Show card details dialog
             val dialog = CardDetailsDialog.newInstance(card)
             dialog.show(parentFragmentManager, "CardDetailsDialog")
-        }
+        }, { cardNumber ->
+            // Delete card
+            dataManager.deleteCard(cardNumber)
+            updateCardList()
+            Toast.makeText(requireContext(), "Card deleted", Toast.LENGTH_SHORT).show()
+        })
         binding.cardsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.cardsRecyclerView.adapter = cardAdapter as RecyclerView.Adapter<*>
+        updateCardList()
     }
 
     private fun setupAddCardButton() {
@@ -49,14 +56,20 @@ class CardsFragment : Fragment() {
             val dialog = AddCardDialog()
             dialog.onCardAdded = { newCard ->
                 dataManager.addCard(newCard)
-                cardAdapter = CardAdapter(dataManager.getCards()) { card ->
-                    val detailDialog = CardDetailsDialog.newInstance(card)
-                    detailDialog.show(parentFragmentManager, "CardDetailsDialog")
-                }
-                binding.cardsRecyclerView.adapter = cardAdapter as RecyclerView.Adapter<*>
+                updateCardList()
             }
             dialog.show(parentFragmentManager, "AddCardDialog")
         }
+    }
+
+    private fun updateCardList() {
+        val cards = dataManager.getCards()
+        cardAdapter.updateCards(cards)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateCardList() // Refresh the list when returning to the fragment
     }
 
     override fun onDestroyView() {
