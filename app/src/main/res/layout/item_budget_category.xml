@@ -1,0 +1,47 @@
+<!-- app/src/main/res/layout/item_budget_category.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="4dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/category_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="14sp"
+        android:text="Category Name" />
+
+    <TextView
+        android:id="@+id/category_spent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorError" 
+        android:textSize="14sp"
+        android:text="$0.00"
+        android:layout_marginEnd="4dp"/>
+
+     <TextView
+        android:id="@+id/category_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorGrayLight"
+        android:textSize="14sp"
+        android:text="of $0.00" />
+
+    <!-- Optional ProgressBar - Uncomment and adjust if needed -->
+    <!-- 
+    <ProgressBar
+        android:id="@+id/category_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="80dp" 
+        android:layout_height="8dp" 
+        android:layout_marginStart="8dp"
+        android:progressDrawable="@drawable/custom_progress_bar" 
+        android:max="100"
+        android:progress="50" />
+    -->
+</LinearLayout> 

@@ -15,7 +15,8 @@
 
         <activity
             android:name=".NavigationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

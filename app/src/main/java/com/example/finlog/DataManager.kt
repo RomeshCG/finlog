@@ -44,6 +44,12 @@ data class BackupData(
     val cards: List<Card>
 )
 
+// Data class for monthly budget
+data class MonthlyBudget(
+    val total: Double,
+    val categories: Map<String, Double> // Map<CategoryName, BudgetAmount>
+)
+
 class DataManager(context: Context) {
 
     private val sharedPreferences: SharedPreferences =
@@ -56,7 +62,7 @@ class DataManager(context: Context) {
         Account("Total", 0.00), // Will be updated dynamically
         Account("Credit Card", 0.00),
         Account("Debit Card", 0.00),
-        Account("Cash", 3000.00)
+        Account("Cash", 0.00) // Initial cash balance will be calculated from records
     )
 
     // Budget categories with initial spent and total values
@@ -66,10 +72,10 @@ class DataManager(context: Context) {
         BudgetCategory("Fuel", 150.00, 500.00)
     )
 
-    // Initial cards
+    // Initial cards (Balances will be updated from records)
     private val initialCards = listOf(
-        Card("Credit Card", "1234567890121234", "JOHN DOE", "123", 15000.00),
-        Card("Debit Card", "9876543210981234", "JOHN DOE", "456", 8000.00)
+        Card("Credit Card", "1234567890121234", "JOHN DOE", "123", 0.0),
+        Card("Debit Card", "9876543210981234", "JOHN DOE", "456", 0.0)
     )
 
     // Keys for SharedPreferences and backup file prefix
@@ -77,6 +83,7 @@ class DataManager(context: Context) {
         private const val KEY_SELECTED_ACCOUNT = "selected_account"
         private const val KEY_RECORDS = "records"
         private const val KEY_CARDS = "cards"
+        private const val KEY_MONTHLY_BUDGET = "monthly_budget" // Key for storing monthly budget
         private const val BACKUP_FILE_PREFIX = "finlog_backup_"
         private const val BACKUP_FILE_EXTENSION = ".json"
         private const val TAG = "DataManager"
@@ -89,16 +96,167 @@ class DataManager(context: Context) {
             val testRecords = listOf(
                 Record("20 Apr 2025", "Food", -6.21, "Cash", "Expense", "Lunch at Cafe"),
                 Record("19 Apr 2025", "Salary", 3400.90, "Debit Card", "Income", "Monthly Salary"),
-                Record("18 Apr 2025", "Transfer", 60.21, "Credit Card", "Transfer", "Cash Withdrawal", "Cash")
+                Record("18 Apr 2025", "Transfer", -60.21, "Credit Card", "Transfer", "Cash Withdrawal", "Cash"), // Negative from Credit Card
+                Record("18 Apr 2025", "Transfer", 60.21, "Cash", "Transfer", "Cash Withdrawal", "Credit Card")     // Positive to Cash
             )
-            saveRecords(testRecords)
+            saveRecords(testRecords) // This will also trigger updateCardBalances
+        } else {
+            updateCardBalances() // Ensure balances are correct on startup
         }
 
-        // Add initial cards if none exist
+        // Add initial cards if none exist (balances will be calculated)
         val cards = getCards()
         if (cards.isEmpty()) {
             saveCards(initialCards)
+            updateCardBalances() // Calculate initial balances
         }
+    }
+
+    // Get monthly budget from SharedPreferences or return default
+    fun getMonthlyBudget(): MonthlyBudget {
+        val budgetJson = sharedPreferences.getString(KEY_MONTHLY_BUDGET, null)
+        return if (budgetJson != null) {
+            try {
+                gson.fromJson(budgetJson, MonthlyBudget::class.java)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing monthly budget JSON: $budgetJson", e)
+                getDefaultMonthlyBudget() // Return default if parsing fails
+            }
+        } else {
+            getDefaultMonthlyBudget() // Return default if not set
+        }
+    }
+
+    // Provides a default monthly budget
+    private fun getDefaultMonthlyBudget(): MonthlyBudget {
+        return MonthlyBudget(
+            total = 6000.00, // Example total budget
+            categories = mapOf(
+                "Entertainment" to 1000.00,
+                "Food" to 2000.00,
+                "Fuel" to 500.00,
+                "Other" to 2500.00
+            )
+        )
+    }
+
+    // Save monthly budget to SharedPreferences
+    fun saveMonthlyBudget(budget: MonthlyBudget) {
+        val budgetJson = gson.toJson(budget)
+        sharedPreferences.edit().putString(KEY_MONTHLY_BUDGET, budgetJson).apply()
+        Log.d(TAG, "Saved monthly budget: $budgetJson")
+    }
+
+    // Get category-wise spending for the current month (only expenses)
+    fun getCategorySpendingCurrentMonth(): Map<String, Double> {
+        val currentMonthYear = SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(Date())
+        Log.d(TAG, "Calculating spending for month: $currentMonthYear")
+
+        val records = getRecords()
+            .filter { record ->
+                try {
+                    val recordDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).parse(record.date)
+                    val recordMonthYear = SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(recordDate)
+                    recordMonthYear == currentMonthYear && record.type == "Expense" // Only count expenses towards budget
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing record date: ${record.date}", e)
+                    false // Exclude records with invalid dates
+                }
+            }
+
+        val spending = records.groupBy { it.category }
+            .mapValues { (_, categoryRecords) ->
+                // Summing absolute values of negative amounts (expenses)
+                categoryRecords.sumOf { if (it.amount < 0) -it.amount else 0.0 }
+            }
+        Log.d(TAG, "Category spending for $currentMonthYear: $spending")
+        return spending
+    }
+
+    // Get total spending (expenses only) for the current month
+    fun getTotalSpendingCurrentMonth(): Double {
+        val categorySpending = getCategorySpendingCurrentMonth()
+        val totalSpending = categorySpending.values.sum()
+        Log.d(TAG, "Total spending for current month: $totalSpending")
+        return totalSpending
+    }
+
+    // Get budget categories with updated spent values for the current month
+    fun getBudgetCategoriesCurrentMonth(): List<BudgetCategory> {
+        val monthlyBudget = getMonthlyBudget()
+        val categorySpending = getCategorySpendingCurrentMonth()
+
+        val categories = monthlyBudget.categories.map { (name, total) ->
+            val spent = categorySpending.getOrDefault(name, 0.0)
+            BudgetCategory(
+                name = name,
+                spent = spent,
+                total = total
+            )
+        }.toMutableList()
+
+        // Add categories from spending that might not be in the budget plan (as Other or similar)
+        categorySpending.keys.forEach { spendingCategory ->
+            if (categories.none { it.name == spendingCategory }) {
+                 val spentAmount = categorySpending.getOrDefault(spendingCategory, 0.0)
+                 // Assign to 'Other' budget if it exists, otherwise create a new category with 0 total
+                 val otherBudgetCategory = categories.find { it.name == "Other" }
+                 if (otherBudgetCategory != null) {
+                      // Add spending to 'Other' category if it exists in the budget
+                      val index = categories.indexOf(otherBudgetCategory)
+                      categories[index] = otherBudgetCategory.copy(spent = otherBudgetCategory.spent + spentAmount)
+                 } else {
+                     // If 'Other' is not in budget, add the category with 0 total (or handle differently)
+                     Log.w(TAG, "Spending category '$spendingCategory' not found in budget. Adding with 0 total.")
+                     categories.add(BudgetCategory(spendingCategory, spentAmount, 0.0))
+                 }
+            }
+        }
+
+        Log.d(TAG, "Budget categories for current month: $categories")
+        return categories.sortedBy { it.name } // Sort alphabetically
+    }
+
+    // Get total budget spent for the current month (sum of expenses)
+    fun getTotalBudgetSpentCurrentMonth(): Double = getTotalSpendingCurrentMonth()
+
+    // Get total budget allocated for the current month
+    fun getTotalBudgetAllocatedCurrentMonth(): Double = getMonthlyBudget().total
+
+    // Get budget left for the current month
+    fun getBudgetLeftCurrentMonth(): Double {
+         val left = getTotalBudgetAllocatedCurrentMonth() - getTotalBudgetSpentCurrentMonth()
+         Log.d(TAG, "Budget left for current month: $left")
+         return left
+    }
+
+    // Update card balances based on records
+    private fun updateCardBalances() {
+        val records = getRecords()
+        val cards = getCards().toMutableList()
+        
+        // Create a map to hold calculated balances for each card type
+        val calculatedBalances = mutableMapOf<String, Double>()
+
+        // Initialize balances from initial card data if available (though records should override)
+        initialCards.forEach { calculatedBalances[it.type] = it.balance }
+
+        // Aggregate amounts from records for each card account
+        records.forEach { record ->
+            // Update balance for the primary account involved in the record
+             if (calculatedBalances.containsKey(record.account)) {
+                 calculatedBalances[record.account] = calculatedBalances.getOrDefault(record.account, 0.0) + record.amount
+             }
+             // Note: Transfers are handled by having two records, one positive and one negative.
+        }
+
+        // Update card objects with calculated balances
+        val updatedCards = cards.map { card ->
+            card.copy(balance = calculatedBalances.getOrDefault(card.type, card.balance)) // Use calculated balance or keep existing if not found
+        }
+
+        Log.d(TAG, "Updating card balances: $updatedCards")
+        saveCards(updatedCards)
     }
 
     // Get all accounts with updated balances
@@ -120,30 +278,11 @@ class DataManager(context: Context) {
     // Calculate cash balance based on records
     private fun calculateCashBalance(): Double {
         val records = getRecords()
-        return records.filter { it.account == "Cash" }
-            .sumOf { it.amount }
-    }
-
-    // Update card balances based on records
-    private fun updateCardBalances() {
-        val records = getRecords()
-        val cards = getCards().toMutableList()
-        
-        // Calculate new balances for each card type
-        val creditCardBalance = records.filter { it.account == "Credit Card" }
-            .sumOf { it.amount }
-        val debitCardBalance = records.filter { it.account == "Debit Card" }
-            .sumOf { it.amount }
-
-        // Update card balances
-        cards.forEach { card ->
-            when (card.type) {
-                "Credit Card" -> card.balance = creditCardBalance
-                "Debit Card" -> card.balance = debitCardBalance
-            }
-        }
-        
-        saveCards(cards)
+        val cashBalance = records
+            .filter { it.account == "Cash" }
+            .sumOf { it.amount } // Sums positive (income/transfer in) and negative (expense/transfer out)
+        Log.d(TAG, "Calculated Cash Balance from records: $cashBalance")
+        return cashBalance
     }
 
     // Get the currently selected account from SharedPreferences
