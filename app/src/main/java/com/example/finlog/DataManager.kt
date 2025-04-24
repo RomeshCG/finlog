@@ -1,8 +1,15 @@
 package com.example.finlog
 
 import android.content.Context
+import android.content.Intent // Needed for PendingIntent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager // Needed for permission check
 import android.util.Log
+import androidx.core.app.ActivityCompat // Needed for permission check
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import android.app.PendingIntent // Needed for notification tap action
+import android.Manifest // Needed for permission constant
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -88,6 +95,9 @@ class DataManager(context: Context) {
         private const val BACKUP_FILE_PREFIX = "finlog_backup_"
         private const val BACKUP_FILE_EXTENSION = ".json"
         private const val TAG = "DataManager"
+        private const val KEY_NOTIFIED_TOTAL_PREFIX = "notified_total_"
+        private const val KEY_NOTIFIED_CATEGORY_PREFIX = "notified_category_"
+        private const val BUDGET_NOTIFICATION_ID = 1 // Unique ID for budget notifications
         // Default Categories if none are saved
         private val DEFAULT_CATEGORIES = listOf("Entertainment", "Food", "Fuel", "Salary", "Transfer", "Other")
     }
@@ -332,19 +342,27 @@ class DataManager(context: Context) {
         }
     }
 
-    // Add a record and save to SharedPreferences
+    // Add a record and save to SharedPreferences, then update balances and check budget
     fun addRecord(record: Record) {
         val records = getRecords().toMutableList()
         records.add(record)
-        saveRecords(records)
-        updateCardBalances() // Update card balances after adding record
+        saveRecords(records) // This calls updateCardBalances internally
+        Log.d(TAG, "Added record: $record")
+
+        // Check budget only if it was an expense
+        if (record.type == "Expense") {
+            checkBudgetAndNotify(record.category, record.amount)
+        }
     }
 
-    // Save records (for deletion or updates)
+    // Save records (for deletion or updates), then update balances
     fun saveRecords(records: List<Record>) {
         val recordsJson = gson.toJson(records)
         sharedPreferences.edit().putString(KEY_RECORDS, recordsJson).apply()
         updateCardBalances() // Update card balances after saving records
+        Log.d(TAG, "Saved ${records.size} records.")
+        // Note: We might want budget checks after deletion/update too, but complexities arise.
+        // For now, checks only happen on adding expenses via addRecord.
     }
 
     // Get last records (limit to 3 for display)
@@ -555,4 +573,78 @@ class DataManager(context: Context) {
         }
         return removed
     }
+
+    // --- Budget Notification Logic ---
+
+    private fun checkBudgetAndNotify(expenseCategory: String, expenseAmount: Double) {
+        val currentMonthYear = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(Date())
+        val monthlyBudget = getMonthlyBudget()
+        val totalSpent = getTotalSpendingCurrentMonth() // Gets updated spending *after* the record was saved
+
+        Log.d(TAG, "Checking budget after expense. Total Spent: $totalSpent, Budget Total: ${monthlyBudget.total}")
+
+        // Check Total Budget
+        val totalBudgetKey = "${KEY_NOTIFIED_TOTAL_PREFIX}${currentMonthYear}"
+        if (totalSpent > monthlyBudget.total && !sharedPreferences.getBoolean(totalBudgetKey, false)) {
+            Log.i(TAG, "Total budget exceeded! Sending notification.")
+            sendBudgetNotification("Total Monthly Budget Exceeded",
+                "You\'ve spent $${String.format("%.2f", totalSpent)} of your $${String.format("%.2f", monthlyBudget.total)} budget.")
+            // Mark as notified for this month
+            sharedPreferences.edit().putBoolean(totalBudgetKey, true).apply()
+        }
+
+        // Check Category Budget
+        val categoryBudgetAllocated = monthlyBudget.categories.getOrDefault(expenseCategory, 0.0)
+        if (categoryBudgetAllocated > 0) { // Only check if a budget is set for this category
+            val categorySpendingMap = getCategorySpendingCurrentMonth()
+            val categorySpent = categorySpendingMap.getOrDefault(expenseCategory, 0.0)
+            val categoryBudgetKey = "${KEY_NOTIFIED_CATEGORY_PREFIX}${expenseCategory}_${currentMonthYear}"
+
+            Log.d(TAG, "Checking category '$expenseCategory'. Spent: $categorySpent, Budget: $categoryBudgetAllocated")
+
+            if (categorySpent > categoryBudgetAllocated && !sharedPreferences.getBoolean(categoryBudgetKey, false)) {
+                Log.i(TAG, "Category budget '$expenseCategory' exceeded! Sending notification.")
+                sendBudgetNotification("$expenseCategory Budget Exceeded",
+                    "You\'ve spent $${String.format("%.2f", categorySpent)} of your $${String.format("%.2f", categoryBudgetAllocated)} budget for $expenseCategory.")
+                // Mark as notified for this month
+                sharedPreferences.edit().putBoolean(categoryBudgetKey, true).apply()
+            }
+        }
+    }
+
+    private fun sendBudgetNotification(title: String, message: String) {
+        // --- Permission Check (Essential!) ---
+        if (ActivityCompat.checkSelfPermission(
+                appContext, // Use appContext here
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "Cannot send notification: POST_NOTIFICATIONS permission not granted.")
+            // Optionally: You could inform the user indirectly or store the need to notify later.
+            return
+        }
+        // --- End Permission Check ---
+
+        // Create an explicit intent for an Activity in your app
+        val intent = Intent(appContext, NavigationActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(appContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val builder = NotificationCompat.Builder(appContext, NavigationActivity.CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your app icon
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent) // Set the intent that will fire when the user taps the notification
+            .setAutoCancel(true) // Automatically removes the notification when the user taps it
+
+        with(NotificationManagerCompat.from(appContext)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(BUDGET_NOTIFICATION_ID, builder.build()) // Use a consistent ID for budget alerts
+        }
+        Log.d(TAG, "Notification sent: Title='$title'")
+    }
+
+    // --- End Budget Notification Logic ---
 }

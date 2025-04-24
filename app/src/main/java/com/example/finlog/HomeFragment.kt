@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
 
         // Update selected account balance display
         val selectedAccount = dataManager.getSelectedAccount()
-        binding.totalBalance.text = String.format("$%.2f", selectedAccount.balance)
+        binding.totalBalance.text = String.format("LKR %.2f", selectedAccount.balance)
         // Optionally update the dropdown indicator text if needed
         // binding.selectedAccountName.text = selectedAccount.name // Assuming you add a TextView for this
         Log.d(TAG, "Selected Account: ${selectedAccount.name}, Balance: ${selectedAccount.balance}")
@@ -117,8 +117,8 @@ class HomeFragment : Fragment() {
         val budgetLeft = dataManager.getBudgetLeftCurrentMonth()
         val budgetSpent = dataManager.getTotalBudgetSpentCurrentMonth()
         val budgetAllocated = dataManager.getTotalBudgetAllocatedCurrentMonth()
-        binding.budgetLeft.text = String.format("$%.2f left", budgetLeft)
-        binding.budgetSpent.text = String.format("$%.2f spent of $%.2f", budgetSpent, budgetAllocated)
+        binding.budgetLeft.text = String.format("LKR %.2f left", budgetLeft)
+        binding.budgetSpent.text = String.format("LKR %.2f spent of LKR %.2f", budgetSpent, budgetAllocated)
         Log.d(TAG, "Budget - Left: $budgetLeft, Spent: $budgetSpent, Allocated: $budgetAllocated")
 
 
@@ -137,8 +137,8 @@ class HomeFragment : Fragment() {
                 // val progressBar: ProgressBar = categoryView.findViewById(R.id.category_progress)
 
                 nameTextView.text = category.name
-                spentTextView.text = String.format("$%.2f", category.spent)
-                totalTextView.text = String.format("of $%.2f", category.total)
+                spentTextView.text = String.format("LKR %.2f", category.spent)
+                totalTextView.text = String.format("of LKR %.2f", category.total)
 
                 // Optional: Set progress bar
                 // if (category.total > 0) {
@@ -163,9 +163,9 @@ class HomeFragment : Fragment() {
         }
 
         // --- Update Expense Chart (Current Month) ---
-        binding.expenseChart.text = String.format("Spent\n$%.2f", budgetSpent)
+        binding.expenseChart.text = String.format("Spent\nLKR %.2f", budgetSpent)
         val expenseBreakdown = categories.joinToString("\n") { category ->
-            String.format("%s: $%.2f / $%.2f", category.name, category.spent, category.total)
+            String.format("%s: LKR %.2f / LKR %.2f", category.name, category.spent, category.total)
         }
         binding.expenseBreakdown.text = expenseBreakdown
         Log.d(TAG, "Expense Breakdown: $expenseBreakdown")
@@ -191,7 +191,7 @@ class HomeFragment : Fragment() {
             binding.record1Date.text = rec.date
             binding.record1Category.text = rec.category // Display category
             binding.record1Title.text = rec.title // Display title
-            binding.record1Amount.text = String.format("$%.2f", rec.amount)
+            binding.record1Amount.text = String.format("LKR %.2f", rec.amount)
             binding.record1Amount.setTextColor( ContextCompat.getColor(requireContext(),
                  if (rec.amount >= 0) R.color.colorAccent else R.color.colorError) // Use colorAccent for income
             )
@@ -201,7 +201,7 @@ class HomeFragment : Fragment() {
             binding.record2Date.text = rec.date
             binding.record2Category.text = rec.category
             binding.record2Title.text = rec.title
-            binding.record2Amount.text = String.format("$%.2f", rec.amount)
+            binding.record2Amount.text = String.format("LKR %.2f", rec.amount)
              binding.record2Amount.setTextColor( ContextCompat.getColor(requireContext(),
                  if (rec.amount >= 0) R.color.colorAccent else R.color.colorError) // Use colorAccent for income
             )
@@ -211,7 +211,7 @@ class HomeFragment : Fragment() {
             binding.record3Date.text = rec.date
             binding.record3Category.text = rec.category
             binding.record3Title.text = rec.title
-            binding.record3Amount.text = String.format("$%.2f", rec.amount)
+            binding.record3Amount.text = String.format("LKR %.2f", rec.amount)
              binding.record3Amount.setTextColor( ContextCompat.getColor(requireContext(),
                  if (rec.amount >= 0) R.color.colorAccent else R.color.colorError) // Use colorAccent for income
             )
@@ -224,19 +224,19 @@ class HomeFragment : Fragment() {
         val accounts = dataManager.getAccounts()
         accounts.getOrNull(0)?.let {
              binding.accountTotalName.text = it.name
-             binding.accountTotalBalance.text = String.format("$%.2f", it.balance)
+             binding.accountTotalBalance.text = String.format("LKR %.2f", it.balance)
         }
         accounts.getOrNull(1)?.let {
              binding.accountCreditCardName.text = it.name
-             binding.accountCreditCardBalance.text = String.format("$%.2f", it.balance)
+             binding.accountCreditCardBalance.text = String.format("LKR %.2f", it.balance)
         }
         accounts.getOrNull(2)?.let {
              binding.accountDebitCardName.text = it.name
-             binding.accountDebitCardBalance.text = String.format("$%.2f", it.balance)
+             binding.accountDebitCardBalance.text = String.format("LKR %.2f", it.balance)
         }
          accounts.getOrNull(3)?.let {
              binding.accountCashName.text = it.name
-             binding.accountCashBalance.text = String.format("$%.2f", it.balance)
+             binding.accountCashBalance.text = String.format("LKR %.2f", it.balance)
         }
          Log.d(TAG, "Updated account list display.")
          Log.d(TAG, "UI Update finished")

@@ -104,18 +104,22 @@
 
     <!-- Support Content -->
     <string name="support_content">
-        We’re here to help you with FinLog!\n\n
+        We\'re here to help you with FinLog!\n\n
         **Contact Us**\n
         Email: support@finlogapp.com\n\n
         **Frequently Asked Questions**\n
         - **How do I add a new record?**\n
-          Go to the Records tab and click the "+" button to add a new record.\n
+          Go to the Records tab and click the \"+\" button to add a new record.\n
         - **How do I back up my data?**\n
-          Go to the Menu tab and select "Create Backup" to save your data.\n
+          Go to the Menu tab and select \"Create Backup\" to save your data.\n
         - **How do I restore my data?**\n
-          Go to the Menu tab and select "Restore Backup" to recover your data.\n\n
-        For more help, please email us, and we’ll get back to you as soon as possible!
+          Go to the Menu tab and select \"Restore Backup\" to recover your data.\n\n
+        For more help, please email us, and we\'ll get back to you as soon as possible!
     </string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Notification Channel -->
+    <string name="channel_name">Budget Alerts</string>
+    <string name="channel_description">Notifications for budget limits</string>
 </resources>

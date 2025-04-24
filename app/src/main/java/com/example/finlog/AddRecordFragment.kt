@@ -149,7 +149,8 @@ class AddRecordFragment : Fragment() {
     }
 
     private fun addOrUpdateExpense() {
-        val amountText = binding.expenseAmount.text.toString().replace("$", "").trim()
+        // Directly parse text assuming it's just a number
+        val amountText = binding.expenseAmount.text.toString().trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             Toast.makeText(context, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
@@ -181,7 +182,8 @@ class AddRecordFragment : Fragment() {
     }
 
     private fun addOrUpdateIncome() {
-        val amountText = binding.incomeAmount.text.toString().replace("$", "").trim()
+        // Directly parse text assuming it's just a number
+        val amountText = binding.incomeAmount.text.toString().trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             Toast.makeText(context, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
@@ -213,7 +215,8 @@ class AddRecordFragment : Fragment() {
     }
 
     private fun addOrUpdateTransfer() {
-        val amountText = binding.transferAmount.text.toString().replace("$", "").trim()
+        // Directly parse text assuming it's just a number
+        val amountText = binding.transferAmount.text.toString().trim()
         val amount = amountText.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             Toast.makeText(context, "Please enter a valid amount", Toast.LENGTH_SHORT).show()

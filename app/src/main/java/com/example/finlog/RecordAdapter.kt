@@ -24,7 +24,7 @@ class RecordAdapter(
             binding.recordDate.text = record.date
             binding.recordTitle.text = record.title
             binding.recordCategory.text = record.category
-            binding.recordAmount.text = "$${String.format("%.2f", record.amount)}"
+            binding.recordAmount.text = String.format("LKR %.2f", record.amount)
 
             // Handle display for transfers
             if (record.type == "Transfer") {
