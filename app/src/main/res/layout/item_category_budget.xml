@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="8dp">
+
+    <TextView
+        android:id="@+id/category_budget_name_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Category Name"
+        android:textSize="16sp"
+        android:textColor="@color/colorOnSurface"/>
+
+    <EditText
+        android:id="@+id/category_budget_edit_text"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="0.00"
+        android:gravity="end"
+        android:minHeight="48dp"/>
+
+</LinearLayout> 

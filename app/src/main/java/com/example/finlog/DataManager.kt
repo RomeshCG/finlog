@@ -83,10 +83,13 @@ class DataManager(context: Context) {
         private const val KEY_SELECTED_ACCOUNT = "selected_account"
         private const val KEY_RECORDS = "records"
         private const val KEY_CARDS = "cards"
-        private const val KEY_MONTHLY_BUDGET = "monthly_budget" // Key for storing monthly budget
+        private const val KEY_MONTHLY_BUDGET = "monthly_budget"
+        private const val KEY_USER_CATEGORIES = "user_categories" // Key for user categories
         private const val BACKUP_FILE_PREFIX = "finlog_backup_"
         private const val BACKUP_FILE_EXTENSION = ".json"
         private const val TAG = "DataManager"
+        // Default Categories if none are saved
+        private val DEFAULT_CATEGORIES = listOf("Entertainment", "Food", "Fuel", "Salary", "Transfer", "Other")
     }
 
     init {
@@ -110,6 +113,25 @@ class DataManager(context: Context) {
             saveCards(initialCards)
             updateCardBalances() // Calculate initial balances
         }
+
+        // Ensure default categories exist if none are saved
+        if (getUserCategories().isEmpty()) {
+            saveUserCategories(DEFAULT_CATEGORIES)
+        }
+        // Ensure default budget includes default categories
+        val currentBudget = getMonthlyBudget()
+        val currentCategories = getUserCategories()
+        val budgetNeedsUpdate = currentCategories.any { !currentBudget.categories.containsKey(it) }
+        if (budgetNeedsUpdate) {
+            val updatedCategories = currentBudget.categories.toMutableMap()
+            currentCategories.forEach { category ->
+                if (!updatedCategories.containsKey(category)) {
+                    updatedCategories[category] = 0.0 // Add new categories with 0 budget initially
+                }
+            }
+            saveMonthlyBudget(currentBudget.copy(categories = updatedCategories))
+            Log.d(TAG, "Updated monthly budget to include new default categories.")
+        }
     }
 
     // Get monthly budget from SharedPreferences or return default
@@ -129,14 +151,11 @@ class DataManager(context: Context) {
 
     // Provides a default monthly budget
     private fun getDefaultMonthlyBudget(): MonthlyBudget {
+        val categories = getUserCategories()
+        val defaultCategoryBudget = categories.associateWith { 0.0 } // Default all to 0
         return MonthlyBudget(
-            total = 6000.00, // Example total budget
-            categories = mapOf(
-                "Entertainment" to 1000.00,
-                "Food" to 2000.00,
-                "Fuel" to 500.00,
-                "Other" to 2500.00
-            )
+            total = 1000.00, // Default total budget
+            categories = defaultCategoryBudget
         )
     }
 
@@ -183,37 +202,31 @@ class DataManager(context: Context) {
 
     // Get budget categories with updated spent values for the current month
     fun getBudgetCategoriesCurrentMonth(): List<BudgetCategory> {
-        val monthlyBudget = getMonthlyBudget()
+        val monthlyBudget = getMonthlyBudget() // Loads saved budget map
         val categorySpending = getCategorySpendingCurrentMonth()
+        val userCategories = getUserCategories() // Get the definitive list of categories
 
-        val categories = monthlyBudget.categories.map { (name, total) ->
+        // Ensure budget map contains all user categories
+        val budgetMap = monthlyBudget.categories.toMutableMap()
+        userCategories.forEach { cat ->
+            if (!budgetMap.containsKey(cat)) {
+                budgetMap[cat] = 0.0 // Add missing categories with 0 budget
+            }
+        }
+
+        val categories = userCategories.map { name ->
+            val total = budgetMap[name] ?: 0.0 // Get budget amount from potentially updated map
             val spent = categorySpending.getOrDefault(name, 0.0)
             BudgetCategory(
                 name = name,
                 spent = spent,
                 total = total
             )
-        }.toMutableList()
-
-        // Add categories from spending that might not be in the budget plan (as Other or similar)
-        categorySpending.keys.forEach { spendingCategory ->
-            if (categories.none { it.name == spendingCategory }) {
-                 val spentAmount = categorySpending.getOrDefault(spendingCategory, 0.0)
-                 // Assign to 'Other' budget if it exists, otherwise create a new category with 0 total
-                 val otherBudgetCategory = categories.find { it.name == "Other" }
-                 if (otherBudgetCategory != null) {
-                      // Add spending to 'Other' category if it exists in the budget
-                      val index = categories.indexOf(otherBudgetCategory)
-                      categories[index] = otherBudgetCategory.copy(spent = otherBudgetCategory.spent + spentAmount)
-                 } else {
-                     // If 'Other' is not in budget, add the category with 0 total (or handle differently)
-                     Log.w(TAG, "Spending category '$spendingCategory' not found in budget. Adding with 0 total.")
-                     categories.add(BudgetCategory(spendingCategory, spentAmount, 0.0))
-                 }
-            }
         }
 
-        Log.d(TAG, "Budget categories for current month: $categories")
+        // No need to handle spending categories not in budget map anymore, as we ensure all user categories are in budgetMap
+
+        Log.d(TAG, "Budget categories for current month (based on user categories): $categories")
         return categories.sortedBy { it.name } // Sort alphabetically
     }
 
@@ -466,5 +479,80 @@ class DataManager(context: Context) {
     // Get account balance by name
     fun getAccountBalance(accountName: String): Double {
         return getAccounts().find { it.name == accountName }?.balance ?: 0.0
+    }
+
+    // --- User Category Management ---
+    fun getUserCategories(): List<String> {
+        val json = sharedPreferences.getString(KEY_USER_CATEGORIES, null)
+        return if (json != null) {
+            try {
+                val type = object : TypeToken<List<String>>() {}.type
+                gson.fromJson(json, type) ?: DEFAULT_CATEGORIES
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing user categories JSON: $json", e)
+                DEFAULT_CATEGORIES
+            }
+        } else {
+            DEFAULT_CATEGORIES
+        }
+    }
+
+    fun saveUserCategories(categories: List<String>) {
+        val distinctSortedCategories = categories.distinct().sorted()
+        val json = gson.toJson(distinctSortedCategories)
+        sharedPreferences.edit().putString(KEY_USER_CATEGORIES, json).apply()
+        Log.d(TAG, "Saved user categories: $distinctSortedCategories")
+
+        // Also update the monthly budget to include any new categories with 0 budget
+        val currentBudget = getMonthlyBudget()
+        val budgetCategories = currentBudget.categories.toMutableMap()
+        var budgetChanged = false
+        distinctSortedCategories.forEach {
+            if (!budgetCategories.containsKey(it)) {
+                budgetCategories[it] = 0.0 // Default new categories to 0 budget
+                budgetChanged = true
+            }
+        }
+        // Remove categories from budget if they are no longer in the user list
+        val categoriesToRemove = budgetCategories.keys.filter { !distinctSortedCategories.contains(it) }
+        if (categoriesToRemove.isNotEmpty()) {
+            categoriesToRemove.forEach { budgetCategories.remove(it) }
+            budgetChanged = true
+        }
+
+        if (budgetChanged) {
+            saveMonthlyBudget(currentBudget.copy(categories = budgetCategories))
+            Log.d(TAG, "Updated monthly budget categories after saving user categories.")
+        }
+    }
+
+    fun addCategory(categoryName: String): Boolean {
+        val trimmedName = categoryName.trim()
+        if (trimmedName.isEmpty()) {
+            Log.w(TAG, "Attempted to add empty category name.")
+            return false
+        }
+        val currentCategories = getUserCategories().toMutableList()
+        if (!currentCategories.any { it.equals(trimmedName, ignoreCase = true) }) {
+            currentCategories.add(trimmedName)
+            saveUserCategories(currentCategories)
+            return true
+        } else {
+            Log.w(TAG, "Category '$trimmedName' already exists.")
+            return false // Indicate category already exists
+        }
+    }
+
+    // Note: Removing categories currently doesn't remove associated records.
+    // Consider adding logic later if records should be re-categorized or handled differently.
+    fun removeCategory(categoryName: String): Boolean {
+        val currentCategories = getUserCategories().toMutableList()
+        val removed = currentCategories.removeIf { it.equals(categoryName, ignoreCase = true) }
+        if (removed) {
+            saveUserCategories(currentCategories)
+        } else {
+            Log.w(TAG, "Category '$categoryName' not found for removal.")
+        }
+        return removed
     }
 }

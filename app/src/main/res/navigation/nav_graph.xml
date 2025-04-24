@@ -21,6 +21,12 @@
         <action
             android:id="@+id/action_homeFragment_to_addRecordFragment"
             app:destination="@id/addRecordFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_manageCategoriesFragment"
+            app:destination="@id/manageCategoriesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_setBudgetFragment"
+            app:destination="@id/setBudgetFragment" />
     </fragment>
 
     <!-- Records Fragment -->
@@ -130,6 +136,30 @@
             android:id="@+id/action_addRecordFragment_to_menuFragment"
             app:destination="@id/menuFragment"
             app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Manage Categories Fragment (New) -->
+    <fragment
+        android:id="@+id/manageCategoriesFragment"
+        android:name="com.example.finlog.ManageCategoriesFragment"
+        android:label="Manage Categories">
+        <action
+            android:id="@+id/action_manageCategoriesFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Set Budget Fragment (New) -->
+    <fragment
+        android:id="@+id/setBudgetFragment"
+        android:name="com.example.finlog.SetBudgetFragment"
+        android:label="Set Monthly Budget">
+        <action
+            android:id="@+id/action_setBudgetFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

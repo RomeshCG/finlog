@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.finlog.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -19,6 +20,31 @@ class HomeFragment : Fragment() {
 
     private lateinit var dataManager: DataManager
     private val TAG = "HomeFragment"
+
+    // --- Navigation Listener Interface ---
+    interface HomeFragmentListener {
+        fun navigateToManageCategories()
+        fun navigateToSetBudget()
+    }
+
+    private var listener: HomeFragmentListener? = null
+
+    override fun onAttach(context: android.content.Context) { // Use android.content.Context
+        super.onAttach(context)
+        if (context is HomeFragmentListener) {
+            listener = context
+        } else {
+            // Log error instead of crashing in case activity doesn't implement immediately
+            Log.e(TAG, "$context must implement HomeFragmentListener")
+            // throw RuntimeException("$context must implement HomeFragmentListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null // Prevent memory leaks
+    }
+    // --- End Navigation Listener Interface ---
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,16 +81,16 @@ class HomeFragment : Fragment() {
             // Consider navigating to MenuFragment or showing a settings menu
         }
 
-        // Handle "All Budgets" click (placeholder)
+        // Handle "All Budgets" click
         binding.allBudgets.setOnClickListener {
-             Log.d(TAG, "All Budgets clicked")
-            // Navigate to a dedicated budget screen
+             Log.d(TAG, "All Budgets clicked - notifying listener")
+             listener?.navigateToSetBudget() // Call the listener in the activity
         }
 
-        // Handle "Statistics" click (placeholder)
+        // Handle "Statistics" click
         binding.statistics.setOnClickListener {
-            Log.d(TAG, "Statistics clicked")
-            // Navigate to a statistics/analysis screen
+            Log.d(TAG, "Statistics clicked - notifying listener")
+            listener?.navigateToManageCategories() // Call the listener in the activity
         }
     }
 

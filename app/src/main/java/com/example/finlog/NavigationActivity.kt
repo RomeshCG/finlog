@@ -1,13 +1,16 @@
 package com.example.finlog
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.finlog.databinding.ActivityNavigationBinding
 
-class NavigationActivity : AppCompatActivity() {
+// Implement the listener interface defined in HomeFragment
+class NavigationActivity : AppCompatActivity(), HomeFragment.HomeFragmentListener {
 
     private lateinit var binding: ActivityNavigationBinding
     private lateinit var dataManager: DataManager
+    private val TAG = "NavigationActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,27 +35,38 @@ class NavigationActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, HomeFragment())
-                        .commit()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is HomeFragment) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, HomeFragment())
+                            .commit()
+                    }
                     true
                 }
                 R.id.nav_records -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, RecordsFragment())
-                        .commit()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is RecordsFragment) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, RecordsFragment())
+                            .addToBackStack(null)
+                            .commit()
+                    }
                     true
                 }
                 R.id.nav_cards -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, CardsFragment())
-                        .commit()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is CardsFragment) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, CardsFragment())
+                            .addToBackStack(null)
+                            .commit()
+                    }
                     true
                 }
                 R.id.nav_menu -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, MenuFragment())
-                        .commit()
+                    if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is MenuFragment) {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, MenuFragment())
+                            .addToBackStack(null)
+                            .commit()
+                    }
                     true
                 }
                 else -> false
@@ -61,9 +75,9 @@ class NavigationActivity : AppCompatActivity() {
 
         // Handle FAB click to open AddRecordFragment
         binding.fabAdd.setOnClickListener {
-            // Check the current fragment
             val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is AddRecordFragment) {
+                Log.d(TAG, "FAB clicked - navigating to AddRecordFragment")
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, AddRecordFragment.newInstance())
                     .addToBackStack(null)
@@ -71,4 +85,26 @@ class NavigationActivity : AppCompatActivity() {
             }
         }
     }
+
+    // --- Implementation of HomeFragmentListener ---
+    override fun navigateToManageCategories() {
+        Log.d(TAG, "Navigating to ManageCategoriesFragment from listener")
+        if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is ManageCategoriesFragment) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ManageCategoriesFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    override fun navigateToSetBudget() {
+        Log.d(TAG, "Navigating to SetBudgetFragment from listener")
+        if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is SetBudgetFragment) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, SetBudgetFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+    // --- End Implementation ---
 }

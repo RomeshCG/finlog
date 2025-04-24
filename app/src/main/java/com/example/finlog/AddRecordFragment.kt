@@ -73,7 +73,7 @@ class AddRecordFragment : Fragment() {
 
         // Populate Spinners
         val accounts = dataManager.getAccounts().map { it.name }
-        val categories = listOf("Entertainment", "Food", "Fuel", "Other")
+        val categories = dataManager.getUserCategories()
 
         val accountAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, accounts)
         accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
