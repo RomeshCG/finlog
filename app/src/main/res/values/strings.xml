@@ -25,6 +25,7 @@
     <!-- Budget Categories -->
     <string name="housing">Housing</string>
     <string name="transportation">Transportation</string>
+    <string name="fuel">Fuel</string>
     <string name="food">Food</string>
     <string name="utilities">Utilities</string>
     <string name="entertainment">Entertainment</string>
@@ -115,6 +116,6 @@
           Go to the Menu tab and select "Restore Backup" to recover your data.\n\n
         For more help, please email us, and we’ll get back to you as soon as possible!
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
